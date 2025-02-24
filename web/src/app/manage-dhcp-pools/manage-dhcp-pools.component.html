@@ -4,6 +4,8 @@
   provisioning to.
 </p>
 <button class="btn btn-outline btn-sm" (click)="showPoolModal('add')">Add Pool</button>
+<button class="btn btn-outline btn-sm" (click)="triggerFileInput()">Import CSV</button>
+<input type="file" #fileInput accept=".csv" (change)="handleFileUpload($event)" style="display: none;" />
 
 <div class="alert alert-danger" role="alert" *ngIf="errors">
   <div class="alert-items">

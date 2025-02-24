@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ApiService } from '../api.service';
+
 import {
   FormBuilder,
   FormControl,
@@ -53,6 +54,36 @@ export class ManageDhcpPoolsComponent implements OnInit {
       this.form.reset();
     }
   }
+
+
+    @ViewChild('fileInput') fileInput!: ElementRef;
+  
+    triggerFileInput() {
+      this.fileInput.nativeElement.click();
+    }
+  
+    handleFileUpload(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        const file = target.files[0];
+        console.log('Selected file:', file.name);
+        
+        // Process the file (e.g., read content)
+        this.readCSVFile(file);
+      }
+    }
+  
+    readCSVFile(file: File) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const csvContent = e.target?.result;
+        console.log('CSV Content:', csvContent);
+        // Further processing of CSV content
+      };
+      reader.readAsText(file);
+    }
+  
+  
 
   submit() {
     const data = {

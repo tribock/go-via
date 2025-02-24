@@ -2,16 +2,16 @@
 
   <div class="main-container">
     <header class="header-6">
-    <div class="branding">
-        <clr-icon shape="vm-bug"></clr-icon>
-        <span class="title">go-via - v{{ version?.Version }} - commit {{ version?.Commit}}</span>
-    </div>
+      <img src="assets/soultec_logo_web.png" alt="SoulTec Logo" class="logo" />
+      <div class="branding">
+        <span class="title">soulDeploy {{ version?.Version }} - commit {{ version?.Commit}}  </span>
+      </div>
     </header>
     <div class="content-container">
       <clr-vertical-nav>
         <a clrVerticalNavLink routerLink="./manage-dhcp-pools" routerLinkActive="active">DHCP Pools</a>
         <a clrVerticalNavLink routerLink="./manage-images" routerLinkActive="active">Images</a>
-        <a clrVerticalNavLink routerLink="./manage-groups" routerLinkActive="active">Groups</a>
+        <a clrVerticalNavLink routerLink="./manage-groups" routerLinkActive="active">Deployments</a>
         <a clrVerticalNavLink routerLink="./manage-users" routerLinkActive="active">Users</a>
         <a clrVerticalNavLink routerLink="./help" routerLinkActive="active">Help</a>
         <a clrVerticalNavLink routerLink="./logs" routerLinkActive="active">Logs</a>
