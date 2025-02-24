@@ -76,12 +76,58 @@ export class ManageDhcpPoolsComponent implements OnInit {
     readCSVFile(file: File) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const csvContent = e.target?.result;
+
+        const csvContent = e.target?.result as string;
         console.log('CSV Content:', csvContent);
-        // Further processing of CSV content
+        const parsedData = this.parseCSV(csvContent);
+        this.uploadPools(parsedData);
       };
       reader.readAsText(file);
     }
+
+  // Sends parsed data to API using ApiService
+  uploadPools(pools: any[]) {
+    pools.forEach((pool) => {
+      console.log(pool)
+      this.apiService.addPool(pool).subscribe({
+        next: (resp: any) => {
+          if (resp.error) {
+            this.errors = resp.error;
+          } else {
+            this.pools.push(resp);
+            this.form.reset();
+          }
+        },
+        error: (err) => {
+          console.error('API error:', err);
+          this.errors = err;
+        }
+      });
+    });
+  }
+
+
+      // Parses CSV string into an array of objects matching form structure
+  parseCSV(csv: string): any[] {
+    const lines = csv.split('\n').map(line => line.trim()).filter(line => line);
+    const headers = lines[0].split(',').map(h => h.trim());
+    const data: any[] = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(',').map(v => v.trim());
+      if (values.length === headers.length) {
+        data.push({
+          net_address: values[0] || '',
+          netmask: values[1] || '',
+          name: values[2] || '',
+          start_address: values[3] || '',
+          end_address: values[4] || '',
+          gateway: values[5] || '',
+        });
+      }
+    }
+    return data;
+  }
   
   
 
