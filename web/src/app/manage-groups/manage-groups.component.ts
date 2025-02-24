@@ -24,9 +24,10 @@ import { id } from '@cds/core/internal';
 
 
 @Component({
-  selector: 'app-manage-groups',
-  templateUrl: './manage-groups.component.html',
-  styleUrls: ['./manage-groups.component.scss']
+    selector: 'app-manage-groups',
+    templateUrl: './manage-groups.component.html',
+    styleUrls: ['./manage-groups.component.scss'],
+    standalone: false
 })
 export class ManageGroupsComponent implements OnInit {
   hosts;

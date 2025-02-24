@@ -6,9 +6,10 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-manage-images',
-  templateUrl: './manage-images.component.html',
-  styleUrls: ['./manage-images.component.scss']
+    selector: 'app-manage-images',
+    templateUrl: './manage-images.component.html',
+    styleUrls: ['./manage-images.component.scss'],
+    standalone: false
 })
 export class ManageImagesComponent implements OnInit {
   images;

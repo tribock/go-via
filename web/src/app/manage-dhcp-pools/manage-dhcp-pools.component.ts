@@ -10,9 +10,10 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-manage-dhcp-pools',
-  templateUrl: './manage-dhcp-pools.component.html',
-  styleUrls: ['./manage-dhcp-pools.component.scss']
+    selector: 'app-manage-dhcp-pools',
+    templateUrl: './manage-dhcp-pools.component.html',
+    styleUrls: ['./manage-dhcp-pools.component.scss'],
+    standalone: false
 })
 export class ManageDhcpPoolsComponent implements OnInit {
   pool;

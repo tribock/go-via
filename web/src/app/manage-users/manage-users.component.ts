@@ -8,9 +8,10 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-manage-users',
-  templateUrl: './manage-users.component.html',
-  styleUrls: ['./manage-users.component.scss']
+    selector: 'app-manage-users',
+    templateUrl: './manage-users.component.html',
+    styleUrls: ['./manage-users.component.scss'],
+    standalone: false
 })
 export class ManageUsersComponent implements OnInit {
   user;
