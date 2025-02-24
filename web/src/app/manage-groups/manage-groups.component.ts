@@ -1,6 +1,6 @@
 import { Component, OnInit, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { ApiService } from '../api.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { cloudIcon, ClarityIcons, atomIconName } from '@cds/core/icon';
 import '@cds/core/icon/register.js';
@@ -37,8 +37,8 @@ export class ManageGroupsComponent implements OnInit {
   group;
   pools;
   advanced;
-  Hostform: FormGroup;
-  Groupform: FormGroup;
+  Hostform: UntypedFormGroup;
+  Groupform: UntypedFormGroup;
   groupid = null;
   poolid = null;
   showGroupModalMode = "";
@@ -47,7 +47,7 @@ export class ManageGroupsComponent implements OnInit {
   progress = {};
   progresstext = {};
 
-  constructor(private apiService: ApiService, private HostformBuilder: FormBuilder, private GroupformBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private HostformBuilder: UntypedFormBuilder, private GroupformBuilder: UntypedFormBuilder) {
     this.Hostform = this.HostformBuilder.group({
       fqdn: ['', [Validators.required]],
       ip: ['', [Validators.required]],

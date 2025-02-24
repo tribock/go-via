@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import {
-  FormBuilder,
+  UntypedFormBuilder,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 
@@ -16,12 +16,12 @@ export class ManageUsersComponent implements OnInit {
   user;
   users;
   errors;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showUserModalMode = "";
 
   constructor(
     private apiService: ApiService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     this.form = this.formBuilder.group({
       username: ['', [Validators.required]],
