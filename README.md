@@ -234,6 +234,18 @@ Please note that go-via is still under heavy development, and there may be bugs.
 
 currently tracking no known issues! :D
 
+
+## Buils
+
+```
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+go install github.com/rakyll/statik@latest
+go install github.com/swaggo/swag/cmd/swag@latest
+
+```
+
 Todo
 -----
 - Currently no requests have been made for features. Please submit any ideas you have.
