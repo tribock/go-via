@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "deployUrl": "/web/",
             "outputPath": {
               "base": "dist/web"
             },

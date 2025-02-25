@@ -1,5 +1,5 @@
 //go:generate bash -c "swag init"
-//go:generate bash -c "cd web && rm -rf ./web/dist && npm install --legacy-peer-deps && npm run build && cd .. && statik -src ./web/dist/ -f"
+//go:generate bash -c "cd web && rm -rf ./web/dist && npm install --legacy-peer-deps && npm run build && cd .. && statik -src ./web/dist/web -f"
 
 package main
 
