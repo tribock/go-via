@@ -90,7 +90,12 @@ export class ManageDhcpPoolsComponent implements OnInit {
   uploadPools(pools: any[]) {
     pools.forEach((pool) => {
       console.log(pool)
-      this.apiService.addPool(pool).subscribe({
+      var data = {
+        ...pool,
+        only_serve_reimage: true,
+        lease_time: 7000,
+      };
+      this.apiService.addPool(data).subscribe({
         next: (resp: any) => {
           if (resp.error) {
             this.errors = resp.error;
@@ -108,28 +113,39 @@ export class ManageDhcpPoolsComponent implements OnInit {
   }
 
 
-      // Parses CSV string into an array of objects matching form structure
+  // Parses CSV string into an array of objects matching the form structure
   parseCSV(csv: string): any[] {
     const lines = csv.split('\n').map(line => line.trim()).filter(line => line);
-    const headers = lines[0].split(',').map(h => h.trim());
+    const headers = lines[0].split(',').map(h => h.trim()); // Extract headers
+    
     const data: any[] = [];
 
     for (let i = 1; i < lines.length; i++) {
       const values = lines[i].split(',').map(v => v.trim());
       if (values.length === headers.length) {
-        data.push({
-          net_address: values[0] || '',
-          netmask: values[1] || '',
-          name: values[2] || '',
-          start_address: values[3] || '',
-          end_address: values[4] || '',
-          gateway: values[5] || '',
+        const formGroup = {};
+
+        // Dynamically map values to the formGroup based on the header fields
+        headers.forEach((header, index) => {
+          let value = values[index] || ''; // Default to empty string if no value
+          
+          // Check if the header is 'netmask' and parse it to an integer
+          if (header === 'netmask' && value !== '') {
+            formGroup[header] = parseInt(value, 10); // Convert netmask to integer
+          } else {
+            formGroup[header] = value;
+          }
+
+          
         });
+
+        // Push the formGroup into the data array
+        data.push(formGroup);
       }
     }
     return data;
   }
-  
+    
   
 
   submit() {

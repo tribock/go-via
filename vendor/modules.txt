@@ -24,18 +24,18 @@ github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/internal/bytesconv
 github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
-# github.com/go-openapi/jsonpointer v0.19.5
-## explicit; go 1.13
+# github.com/go-openapi/jsonpointer v0.21.0
+## explicit; go 1.20
 github.com/go-openapi/jsonpointer
-# github.com/go-openapi/jsonreference v0.20.0
-## explicit; go 1.13
+# github.com/go-openapi/jsonreference v0.21.0
+## explicit; go 1.20
 github.com/go-openapi/jsonreference
 github.com/go-openapi/jsonreference/internal
-# github.com/go-openapi/spec v0.20.6
-## explicit; go 1.13
+# github.com/go-openapi/spec v0.21.0
+## explicit; go 1.20
 github.com/go-openapi/spec
-# github.com/go-openapi/swag v0.21.1
-## explicit; go 1.11
+# github.com/go-openapi/swag v0.23.0
+## explicit; go 1.20
 github.com/go-openapi/swag
 # github.com/go-playground/locales v0.13.0
 ## explicit; go 1.13
@@ -81,8 +81,8 @@ github.com/klauspost/compress/flate
 # github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 ## explicit
 github.com/koding/multiconfig
-# github.com/kr/pretty v0.1.0
-## explicit
+# github.com/kr/pretty v0.3.1
+## explicit; go 1.12
 github.com/kr/pretty
 # github.com/kr/text v0.2.0
 ## explicit
@@ -90,8 +90,8 @@ github.com/kr/text
 # github.com/leodido/go-urn v1.2.0
 ## explicit; go 1.13
 github.com/leodido/go-urn
-# github.com/mailru/easyjson v0.7.7
-## explicit; go 1.12
+# github.com/mailru/easyjson v0.9.0
+## explicit; go 1.20
 github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
@@ -117,6 +117,9 @@ github.com/pin/tftp/netascii
 # github.com/rakyll/statik v0.1.7
 ## explicit; go 1.12
 github.com/rakyll/statik/fs
+# github.com/rogpeppe/go-internal v1.11.0
+## explicit; go 1.19
+github.com/rogpeppe/go-internal/fmtsort
 # github.com/sirupsen/logrus v1.7.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
@@ -126,7 +129,7 @@ github.com/swaggo/files
 # github.com/swaggo/gin-swagger v1.3.0
 ## explicit; go 1.13
 github.com/swaggo/gin-swagger
-# github.com/swaggo/swag v1.8.4
+# github.com/swaggo/swag v1.16.4
 ## explicit; go 1.18
 github.com/swaggo/swag
 # github.com/ugorji/go/codec v1.1.13
@@ -191,6 +194,7 @@ golang.org/x/tools/go/loader
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
+gopkg.in/yaml.v3
 # gorm.io/datatypes v1.0.0
 ## explicit; go 1.14
 gorm.io/datatypes

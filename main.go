@@ -1,5 +1,5 @@
 //go:generate bash -c "swag init"
-//go:generate bash -c "cd web && rm -rf ./web/dist && npm install --legacy-peer-deps && npm run build && cd .. && statik -src ./web/dist/web -f"
+//go:generate bash -c "cd web && rm -rf ./web/dist && npm install --legacy-peer-deps && npm run build && cd .. && statik -src ./web/dist/web/browser -f"
 
 package main
 
@@ -224,13 +224,13 @@ func main() {
 	})
 
 	r.NoRoute(func(c *gin.Context) {
-		c.Request.URL.Path = "/web/" // force us to always return index.html and not the requested page to be compatible with HTML5 routing
+		// c.Request.URL.Path = "/index.html" // force us to always return index.html and not the requested page to be compatible with HTML5 routing
 		http.FileServer(statikFS).ServeHTTP(c.Writer, c.Request)
 	})
 
 	ui := r.Group("/")
 	{
-		ui.GET("/web/*all", gin.WrapH(http.FileServer(statikFS)))
+		// ui.GET("/*all", gin.WrapH(http.FileServer(statikFS)))
 
 		ui.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}

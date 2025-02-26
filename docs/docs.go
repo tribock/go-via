@@ -2433,6 +2433,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "VMware Imaging Appliances written in GO with full HTTP-REST",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

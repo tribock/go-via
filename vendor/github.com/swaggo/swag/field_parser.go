@@ -10,7 +10,6 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/go-openapi/jsonreference"
 	"github.com/go-openapi/spec"
 )
 
@@ -44,7 +43,7 @@ func newTagBaseFieldParser(p *Parser, field *ast.Field) FieldParser {
 
 func (ps *tagBaseFieldParser) ShouldSkip() bool {
 	// Skip non-exported fields.
-	if !ast.IsExported(ps.field.Names[0].Name) {
+	if ps.field.Names != nil && !ast.IsExported(ps.field.Names[0].Name) {
 		return true
 	}
 
@@ -66,25 +65,57 @@ func (ps *tagBaseFieldParser) ShouldSkip() bool {
 	return false
 }
 
-func (ps *tagBaseFieldParser) FieldName() (string, error) {
-	var name string
-	if ps.field.Tag != nil {
-		// json:"tag,hoge"
-		name = strings.TrimSpace(strings.Split(ps.tag.Get(jsonTag), ",")[0])
+func (ps *tagBaseFieldParser) FieldNames() ([]string, error) {
+	if len(ps.field.Names) <= 1 {
+		// if embedded but with a json/form name ??
+		if ps.field.Tag != nil {
+			// json:"tag,hoge"
+			name := strings.TrimSpace(strings.Split(ps.tag.Get(jsonTag), ",")[0])
+			if name != "" {
+				return []string{name}, nil
+			}
 
-		if name != "" {
-			return name, nil
+			// use "form" tag over json tag
+			name = ps.FormName()
+			if name != "" {
+				return []string{name}, nil
+			}
+		}
+		if len(ps.field.Names) == 0 {
+			return nil, nil
 		}
 	}
-
-	switch ps.p.PropNamingStrategy {
-	case SnakeCase:
-		return toSnakeCase(ps.field.Names[0].Name), nil
-	case PascalCase:
-		return ps.field.Names[0].Name, nil
-	default:
-		return toLowerCamelCase(ps.field.Names[0].Name), nil
+	var names = make([]string, 0, len(ps.field.Names))
+	for _, name := range ps.field.Names {
+		switch ps.p.PropNamingStrategy {
+		case SnakeCase:
+			names = append(names, toSnakeCase(name.Name))
+		case PascalCase:
+			names = append(names, name.Name)
+		default:
+			names = append(names, toLowerCamelCase(name.Name))
+		}
 	}
+	return names, nil
+}
+
+func (ps *tagBaseFieldParser) firstTagValue(tag string) string {
+	if ps.field.Tag != nil {
+		return strings.TrimRight(strings.TrimSpace(strings.Split(ps.tag.Get(tag), ",")[0]), "[]")
+	}
+	return ""
+}
+
+func (ps *tagBaseFieldParser) FormName() string {
+	return ps.firstTagValue(formTag)
+}
+
+func (ps *tagBaseFieldParser) HeaderName() string {
+	return ps.firstTagValue(headerTag)
+}
+
+func (ps *tagBaseFieldParser) PathName() string {
+	return ps.firstTagValue(uriTag)
 }
 
 func toSnakeCase(in string) string {
@@ -141,6 +172,7 @@ func (ps *tagBaseFieldParser) CustomSchema() (*spec.Schema, error) {
 }
 
 type structField struct {
+	title        string
 	schemaType   string
 	arrayType    string
 	formatType   string
@@ -207,12 +239,30 @@ func splitNotWrapped(s string, sep rune) []string {
 	return result
 }
 
+// ComplementSchema complement schema with field properties
 func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 	types := ps.p.GetSchemaTypePath(schema, 2)
 	if len(types) == 0 {
 		return fmt.Errorf("invalid type for field: %s", ps.field.Names[0])
 	}
 
+	if IsRefSchema(schema) {
+		var newSchema = spec.Schema{}
+		err := ps.complementSchema(&newSchema, types)
+		if err != nil {
+			return err
+		}
+		if !reflect.ValueOf(newSchema).IsZero() {
+			*schema = *(newSchema.WithAllOf(*schema))
+		}
+		return nil
+	}
+
+	return ps.complementSchema(schema, types)
+}
+
+// complementSchema complement schema with field properties
+func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []string) error {
 	if ps.field.Tag == nil {
 		if ps.field.Doc != nil {
 			schema.Description = strings.TrimSpace(ps.field.Doc.Text())
@@ -228,6 +278,7 @@ func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 	field := &structField{
 		schemaType: types[0],
 		formatType: ps.tag.Get(formatTag),
+		title:      ps.tag.Get(titleTag),
 	}
 
 	if len(types) > 1 && (types[0] == ARRAY || types[0] == OBJECT) {
@@ -353,19 +404,6 @@ func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 
 	schema.ReadOnly = ps.tag.Get(readOnlyTag) == "true"
 
-	if !reflect.ValueOf(schema.Ref).IsZero() && schema.ReadOnly {
-		schema.AllOf = []spec.Schema{*spec.RefSchema(schema.Ref.String())}
-		schema.Ref = spec.Ref{
-			Ref: jsonreference.Ref{
-				HasFullURL:      false,
-				HasURLPathOnly:  false,
-				HasFragmentOnly: false,
-				HasFileScheme:   false,
-				HasFullFilePath: false,
-			},
-		} // clear out existing ref
-	}
-
 	defaultTagValue := ps.tag.Get(defaultTag)
 	if defaultTagValue != "" {
 		value, err := defineType(field.schemaType, defaultTagValue)
@@ -381,6 +419,7 @@ func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 	if field.schemaType != ARRAY {
 		schema.Format = field.formatType
 	}
+	schema.Title = field.title
 
 	extensionsTagValue := ps.tag.Get(extensionsTag)
 	if extensionsTagValue != "" {
@@ -405,13 +444,13 @@ func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 			if schema.Items.Schema.Extensions == nil {
 				schema.Items.Schema.Extensions = map[string]interface{}{}
 			}
-			schema.Items.Schema.Extensions["x-enum-varnames"] = field.enumVarNames
+			schema.Items.Schema.Extensions[enumVarNamesExtension] = field.enumVarNames
 		} else {
 			// Add to top level schema
 			if schema.Extensions == nil {
 				schema.Extensions = map[string]interface{}{}
 			}
-			schema.Extensions["x-enum-varnames"] = field.enumVarNames
+			schema.Extensions[enumVarNamesExtension] = field.enumVarNames
 		}
 	}
 
