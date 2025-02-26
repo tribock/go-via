@@ -325,6 +325,12 @@ export class ManageGroupsComponent implements OnInit {
     this.poolid = pool_id;
   }
 
+  importHostsFromCSVToGroup(group_id, pool_id) {
+    this.showHostModalMode = "add";
+    this.groupid = group_id;
+    this.poolid = pool_id;
+  }
+
 
   submitHost() {
 

@@ -53,6 +53,7 @@
 		</clr-dg-row>
 	</clr-datagrid>
 	<button class="btn btn-outline btn-sm" (click)="addHostToGroup(group.id, group.pool_id)">Add host</button>
+	<button class="btn btn-outline btn-sm" (click)="importHostsFromCSVToGroup(group.id, group.pool_id)">Import Hosts</button>
 	<button class="btn btn-outline btn-sm" (click)="showGroupModal('edit', group.id)">Edit Group</button>
 	<button class="btn btn-warning-outline btn-sm" (click)="removeGroup(group.id)">Remove</button>
 </div>
