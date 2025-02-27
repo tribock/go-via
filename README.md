@@ -238,7 +238,7 @@ currently tracking no known issues! :D
 ## Buils
 
 ```
-
+export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 go install github.com/rakyll/statik@latest

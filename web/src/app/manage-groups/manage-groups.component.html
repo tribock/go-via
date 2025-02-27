@@ -3,7 +3,6 @@
 	saves you time by being able to organize all hosts that will look the same, and simply configure the group with
 	properties.</p>
 <button class="btn btn-outline btn-sm" (click)="showGroupModal('add')">Add Group</button>
-
 <div class="alert alert-danger" role="alert" *ngIf="errors">
 	<div class="alert-items">
 		<div class="alert-item static" *ngFor="let error of errors | keyvalue">
@@ -51,9 +50,11 @@
 					(click)="cancelImageHost(host.id)">cancel</button>
 			</clr-dg-cell>
 		</clr-dg-row>
+		
 	</clr-datagrid>
 	<button class="btn btn-outline btn-sm" (click)="addHostToGroup(group.id, group.pool_id)">Add host</button>
-	<button class="btn btn-outline btn-sm" (click)="importHostsFromCSVToGroup(group.id, group.pool_id)">Import Hosts</button>
+	<button class="btn btn-outline btn-sm" (click)="triggerFileInput()">Import Hosts</button>
+	<input type="file" #fileInput accept=".csv" (change)="importHostsFromCSVToGroup(group.id, group.pool_id)" style="display: none;" />
 	<button class="btn btn-outline btn-sm" (click)="showGroupModal('edit', group.id)">Edit Group</button>
 	<button class="btn btn-warning-outline btn-sm" (click)="removeGroup(group.id)">Remove</button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵɵtrustConstantResourceUrl } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { ApiService } from '../api.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -325,11 +325,90 @@ export class ManageGroupsComponent implements OnInit {
     this.poolid = pool_id;
   }
 
-  importHostsFromCSVToGroup(group_id, pool_id) {
-    this.showHostModalMode = "add";
-    this.groupid = group_id;
-    this.poolid = pool_id;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
   }
+    
+  importHostsFromCSVToGroup(group_id, pool_id) {
+      const target = event.target as HTMLInputElement;
+    
+      if (target.files && target.files.length > 0) {
+        const file = target.files[0];
+        console.log('Selected file:', file.name);
+    
+        // Call readCSVFile and handle the Promise
+        this.readCSVFile(file).then((parsedData) => {
+          console.log('Parsed Host Data:', parsedData);
+          
+          parsedData.forEach((host) => {
+            const hostData = {
+              fqdn: host.fqdn,
+              ip: host.ip,   // Add other properties you need
+              mac: host.mac, // If required
+              hostname: host.fqdn.split(".")[0],
+              domain: host.fqdn.split(".").slice(1).join('.'),
+              group_id: parseInt(group_id),
+              pool_id: parseInt(pool_id),
+            };
+    
+            // Call addHost directly with the necessary data
+            this.addHost(hostData); // Passing the data directly, not the form group           
+          });
+        }).catch((error) => {
+          console.error('Error:', error);
+          // Handle error, such as showing a notification to the user
+        });
+      }
+    }
+  readCSVFile(file: File): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const csvContent = e.target?.result as string;
+        
+        try {
+          const parsedData = this.parseCSV(csvContent);
+          resolve(parsedData); // Resolve with parsed data
+        } catch (error) {
+          reject('Error parsing CSV: ' + error); // Reject if there's an error parsing
+        }
+      };
+
+      reader.onerror = (error) => {
+        reject('Error reading file: ' + error); // Reject if there's an error reading the file
+      };
+
+      reader.readAsText(file);
+    });
+  }
+    // Parses CSV string into an array of objects matching the form structure
+    parseCSV(csv: string): any[] {
+      const lines = csv.split('\n').map(line => line.trim()).filter(line => line);
+      const headers = lines[0].split(',').map(h => h.trim()); // Extract headers
+      
+      const data: any[] = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        if (values.length === headers.length) {
+          const formGroup = {};
+
+          // Dynamically map values to the formGroup based on the header fields
+          headers.forEach((header, index) => {
+            let value = values[index] || ''; // Default to empty string if no value
+            formGroup[header] = value;
+          
+          });
+
+          // Push the formGroup into the data array
+          data.push(formGroup);
+        }
+      }
+      return data;
+    }
 
 
   submitHost() {
@@ -341,11 +420,14 @@ export class ManageGroupsComponent implements OnInit {
       group_id: parseInt(this.groupid),
       pool_id: parseInt(this.poolid),
     }
+    this.addHost(data)
 
+  }
+
+  addHost(data){
     if (data.ks) {
       data.ks = btoa(data.ks)
     }
-
     this.apiService.addHost(data).subscribe((data: any) => {
 
       if (data.id) {
@@ -361,6 +443,8 @@ export class ManageGroupsComponent implements OnInit {
       } else {
         this.errors = [data.message];
       }
+
+      console.log(this.errors)
     });
   }
 
