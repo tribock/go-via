@@ -17,7 +17,7 @@ import (
 	"github.com/maxiepax/go-via/models"
 	"github.com/maxiepax/go-via/secrets"
 	"github.com/maxiepax/go-via/websockets"
-	"github.com/rakyll/statik/fs"
+	static "github.com/soulteary/gin-static"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -173,10 +173,10 @@ func main() {
 	r := gin.New()
 	r.Use(cors.Default())
 
-	statikFS, err := fs.New()
-	if err != nil {
-		logrus.Fatal(err)
-	}
+	// statikFS, err := fs.New()
+	// if err != nil {
+	// 	logrus.Fatal(err)
+	// }
 
 	// ks.cfg is served at top to not place it behind BasicAuth
 	r.GET("ks.cfg", api.Ks(key))
@@ -223,9 +223,14 @@ func main() {
 		c.Next()
 	})
 
+	r.Use(static.Serve("/", static.LocalFile("./web/dist/web", false)))
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(200, "test")
+	})
 	r.NoRoute(func(c *gin.Context) {
-		// c.Request.URL.Path = "/index.html" // force us to always return index.html and not the requested page to be compatible with HTML5 routing
-		http.FileServer(statikFS).ServeHTTP(c.Writer, c.Request)
+		logrus.Debugf("%s doesn't exists, redirect on /\n", c.Request.URL.Path)
+		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
 	ui := r.Group("/")
