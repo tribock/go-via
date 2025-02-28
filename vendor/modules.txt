@@ -69,6 +69,9 @@ github.com/gin-contrib/cors
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
+# github.com/gin-contrib/static v1.1.3
+## explicit; go 1.21.0
+github.com/gin-contrib/static
 # github.com/gin-gonic/gin v1.10.0
 ## explicit; go 1.20
 github.com/gin-gonic/gin
@@ -198,7 +201,6 @@ github.com/rogpeppe/go-internal/fmtsort
 github.com/sirupsen/logrus
 # github.com/soulteary/gin-static v0.2.5
 ## explicit; go 1.23.3
-github.com/soulteary/gin-static
 # github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 ## explicit
 github.com/swaggo/files
@@ -305,7 +307,7 @@ golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
-# google.golang.org/protobuf v1.36.0
+# google.golang.org/protobuf v1.36.1
 ## explicit; go 1.21
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/detrand

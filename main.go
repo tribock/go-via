@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/maxiepax/go-via/api"
@@ -17,7 +18,8 @@ import (
 	"github.com/maxiepax/go-via/models"
 	"github.com/maxiepax/go-via/secrets"
 	"github.com/maxiepax/go-via/websockets"
-	static "github.com/soulteary/gin-static"
+
+	"github.com/gin-contrib/static"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -26,10 +28,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koding/multiconfig"
 
-	"github.com/sirupsen/logrus"
-
 	_ "github.com/maxiepax/go-via/docs"
 	_ "github.com/maxiepax/go-via/statik"
+	"github.com/rakyll/statik/fs"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -173,11 +175,6 @@ func main() {
 	r := gin.New()
 	r.Use(cors.Default())
 
-	// statikFS, err := fs.New()
-	// if err != nil {
-	// 	logrus.Fatal(err)
-	// }
-
 	// ks.cfg is served at top to not place it behind BasicAuth
 	r.GET("ks.cfg", api.Ks(key))
 
@@ -223,11 +220,13 @@ func main() {
 		c.Next()
 	})
 
-	r.Use(static.Serve("/", static.LocalFile("./web/dist/web", false)))
+	statikFS, err := fs.New()
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "test")
-	})
+	r.Use(static.Serve("/", NewMyServeFileSystem(statikFS)))
+
 	r.NoRoute(func(c *gin.Context) {
 		logrus.Debugf("%s doesn't exists, redirect on /\n", c.Request.URL.Path)
 		c.Redirect(http.StatusMovedPermanently, "/")
@@ -356,4 +355,29 @@ func main() {
 		"error": err,
 	}).Error("Webserver")
 
+}
+
+// ServeFileSystem implementation that wraps around http.FileSystem
+type MyServeFileSystem struct {
+	fs http.FileSystem
+}
+
+// NewMyServeFileSystem creates a new instance of MyServeFileSystem
+func NewMyServeFileSystem(fs http.FileSystem) *MyServeFileSystem {
+	return &MyServeFileSystem{fs: fs}
+}
+
+// Open implements the http.FileSystem interface
+func (fs *MyServeFileSystem) Open(name string) (http.File, error) {
+	return fs.fs.Open(name)
+}
+
+// Exists implements the Exists method to check if a file exists
+func (fs *MyServeFileSystem) Exists(prefix string, path string) bool {
+	// Join prefix and path to create the full file path
+	fullPath := filepath.Join(prefix, path)
+
+	// Check if the file exists in the wrapped file system
+	_, err := fs.fs.Open(fullPath)
+	return err == nil // If there's no error, the file exists
 }
