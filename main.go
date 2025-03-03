@@ -234,7 +234,6 @@ func main() {
 
 	ui := r.Group("/")
 	{
-		// ui.GET("/*all", gin.WrapH(http.FileServer(statikFS)))
 
 		ui.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
