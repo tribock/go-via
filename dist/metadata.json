@@ -1,1 +1,1 @@
-{"project_name":"go-via","tag":"v1.0.0","previous_tag":"v0.4.5","version":"1.0.0","commit":"66652e522886fc47c0302494c06206ea47d71aef","date":"2025-03-05T09:12:13.253212171Z","runtime":{"goos":"linux","goarch":"arm64"}}
+{"project_name":"go-via","tag":"v1.0.1","previous_tag":"v1.0.0","version":"1.0.1","commit":"1d1ab54a2e163f6a1428fb727281cef2ddc798de","date":"2025-03-05T10:20:11.066375+01:00","runtime":{"goos":"darwin","goarch":"arm64"}}

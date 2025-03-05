@@ -1,1 +1,1 @@
-818bf80c0548970c1fcbf656d1f7bf734ed8d95ba0a72d4bb21a949f4b2c63e9  go-via_1.0.0_linux_amd64.tar.gz
+fb40a4b145f8b80357db43dacabf3e6f4f7213ba1040cdc2033c85053e2f2eb3  go-via_1.0.1_linux_amd64.tar.gz

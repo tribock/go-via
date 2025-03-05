@@ -3,6 +3,8 @@ release:
   github:
     owner: tribock
     name: go-via
+  draft: true
+  prerelease: auto
   name_template: '{{.Tag}}'
 builds:
   - id: go-via
