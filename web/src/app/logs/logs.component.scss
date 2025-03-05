@@ -1,11 +1,10 @@
 #wrapper {
     width: 100%;
-    height: 500px; /* Adjust as needed */
-    overflow-y: auto; /* Makes the wrapper scrollable */
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+    overflow-y: auto;
+}
   
   .table-container {
     width: 100%;

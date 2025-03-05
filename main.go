@@ -235,12 +235,11 @@ func main() {
 	ui := r.Group("/")
 	{
 
-		ui.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		ui.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
 	v1 := r.Group("/v1")
 	{
-		//v1.GET("log", logServer.Handle)
 
 		pools := v1.Group("/pools")
 		{
