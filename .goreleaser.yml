@@ -1,7 +1,8 @@
 before:
   hooks:
     - go get -v -d
-    - go get -u github.com/swaggo/swag/cmd/swag
+    - go mod tidy
+    - go mod vendor
     - go generate ./...
 builds:
 - env:
