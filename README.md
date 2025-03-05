@@ -235,14 +235,16 @@ Please note that go-via is still under heavy development, and there may be bugs.
 currently tracking no known issues! :D
 
 
-## Buils
+## Build
 
 ```
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
 go install github.com/rakyll/statik@latest
 go install github.com/swaggo/swag/cmd/swag@latest
+go install github.com/goreleaser/goreleaser@latest
 
 ```
 
