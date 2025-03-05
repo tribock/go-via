@@ -1,7 +1,19 @@
-FROM golang:1.16
+FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
+FROM --platform=$BUILDPLATFORM golang:1.23
+LABEL org.opencontainers.image.source=https://github.com/IzumaNetworks/trivial-golang-k8s-deployment
+LABEL org.opencontainers.image.description="Trivial Go K8s example"
+LABEL org.opencontainers.image.licenses=Apache-2.0
 
-ADD go-via /usr/local/bin/go-via
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y clean
 
-EXPOSE 8080
-
-ENTRYPOINT ["go-via"]
+COPY --from=xx / /
+ADD . /app
+ARG TARGETPLATFORM
+RUN xx-apt install -y libc6-dev gcc
+ENV CGO_ENABLED=1
+WORKDIR /app
+RUN xx-go --wrap
+RUN go build -o app .
+ENTRYPOINT [ "/app/app" ]

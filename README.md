@@ -237,7 +237,7 @@ currently tracking no known issues! :D
 
 ## Build
 
-```
+```bash
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
@@ -246,6 +246,12 @@ go install github.com/rakyll/statik@latest
 go install github.com/swaggo/swag/cmd/swag@latest
 go install github.com/goreleaser/goreleaser@latest
 
+
+docker buildx build --platform linux/amd64 --tag my-container:latest --load .
+
+docker run -p 8443:8443 docker.io/library/my-container:latest
+
+#TODO: add registry and makefile
 ```
 
 Todo
