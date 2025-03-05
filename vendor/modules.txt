@@ -1,5 +1,5 @@
-# github.com/BurntSushi/toml v1.1.0
-## explicit; go 1.16
+# github.com/BurntSushi/toml v1.4.0
+## explicit; go 1.18
 github.com/BurntSushi/toml
 github.com/BurntSushi/toml/internal
 # github.com/KyleBanks/depth v1.2.1
@@ -113,8 +113,6 @@ github.com/goccy/go-json/internal/encoder/vm_color_indent
 github.com/goccy/go-json/internal/encoder/vm_indent
 github.com/goccy/go-json/internal/errors
 github.com/goccy/go-json/internal/runtime
-# github.com/golang/protobuf v1.5.0
-## explicit; go 1.9
 # github.com/google/gopacket v1.1.19
 ## explicit; go 1.12
 github.com/google/gopacket
@@ -199,8 +197,8 @@ github.com/rogpeppe/go-internal/fmtsort
 # github.com/sirupsen/logrus v1.7.0
 ## explicit; go 1.13
 github.com/sirupsen/logrus
-# github.com/soulteary/gin-static v0.2.5
-## explicit; go 1.23.3
+# github.com/stretchr/testify v1.10.0
+## explicit; go 1.17
 # github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 ## explicit
 github.com/swaggo/files
