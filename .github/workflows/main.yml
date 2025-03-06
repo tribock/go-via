@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get the version
+        id: get_version
+        run: |
+          echo "VERSION=$(git describe --tags --always --dirty)" >> $GITHUB_OUTPUT
       - name: install buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v3
@@ -22,6 +28,7 @@ jobs:
           driver: docker-container
       - name: build the image
         run: |
-          docker buildx build \
-            --tag ghcr.io/tribock/go-via:latest \
+          docker buildx build --push \
+            --tag ghcr.io/tribock/go-via:${{ steps.get_version.outputs.VERSION }} \
             --platform linux/amd64,linux/arm64 .
+
