@@ -231,7 +231,7 @@ func processRequest(req *layers.DHCPv4, sourceNet net.IP, ip net.IP) (*layers.DH
 	AddOptions(req, resp, *pool, lease, ip)
 
 	lease.IP = requestedIP.String()
-	lease.PoolID = models.NullInt32{sql.NullInt32{int32(pool.ID), true}}
+	lease.PoolID = models.NullInt32{NullInt32: sql.NullInt32{Int32: int32(pool.ID), Valid: true}}
 	lease.LastSeenRelay = req.RelayAgentIP.String()
 	if (lease.FirstSeen == time.Time{}) {
 		lease.FirstSeen = time.Now()
@@ -310,7 +310,7 @@ func processDecline(req *layers.DHCPv4, sourceNet net.IP, ip net.IP) (*layers.DH
 	}
 
 	lease.Mac = ""
-	lease.PoolID = models.NullInt32{sql.NullInt32{int32(pool.ID), true}}
+	lease.PoolID = models.NullInt32{NullInt32: sql.NullInt32{Int32: int32(pool.ID), Valid: true}}
 	lease.LastSeenRelay = req.RelayAgentIP.String()
 	lease.LastSeen = time.Now()
 	lease.Expires = time.Now().Add(3600 * time.Second)

@@ -1,19 +1,32 @@
-FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
-FROM --platform=$BUILDPLATFORM golang:1.23
-LABEL org.opencontainers.image.source=https://github.com/IzumaNetworks/trivial-golang-k8s-deployment
-LABEL org.opencontainers.image.description="Trivial Go K8s example"
-LABEL org.opencontainers.image.licenses=Apache-2.0
+# Build the manager binary
+FROM golang:1.23 AS builder
+ARG TARGETOS
+ARG TARGETARCH
+# Accept version as a build argument
+ARG CI_COMMIT_TAG
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y clean
+# Set environment variable with the provided version
+ENV VERSION=$CI_COMMIT_TAG
 
-COPY --from=xx / /
-ADD . /app
-ARG TARGETPLATFORM
-RUN xx-apt install -y libc6-dev gcc
-ENV CGO_ENABLED=1
-WORKDIR /app
-RUN xx-go --wrap
-RUN go build -o app .
-ENTRYPOINT [ "/app/app" ]
+WORKDIR /workspace
+
+# Copy the go source
+COPY . .
+
+
+# Build
+# the GOARCH has not a default value to allow the binary be built according to the host where the command
+# was called. For example, if we call make docker-build in a local env which has the Apple Silicon M1 SO
+# the docker BUILDPLATFORM arg will be linux/arm64 when for Apple x86 it will be linux/amd64. Therefore,
+# by leaving it empty we can ensure that the container and binary shipped on it will have the same platform.
+RUN CGO_ENABLED=1 go build -o manager .
+
+# Use distroless as minimal base image to package the manager binary
+# Refer to https://github.com/GoogleContainerTools/distroless for more details
+FROM gcr.io/distroless/static:nonroot
+WORKDIR /
+COPY --from=builder /workspace/manager .
+USER 65532:65532
+
+
+ENTRYPOINT ["/manager"]

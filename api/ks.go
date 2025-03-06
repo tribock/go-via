@@ -41,7 +41,7 @@ network --bootproto=static --ip={{ .ip }} --gateway={{ .gateway }} --netmask={{ 
 reboot
 `
 
-//func Ks(c *gin.Context) {
+// func Ks(c *gin.Context) {
 func Ks(key string) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var item models.Address
