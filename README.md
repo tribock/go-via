@@ -247,12 +247,13 @@ go install github.com/swaggo/swag/cmd/swag@latest
 go install github.com/goreleaser/goreleaser@latest
 
 
-docker buildx build --platform linux/amd64 --tag my-container:latest --load .
+docker buildx build --platform linux/amd64 --tag ghcr.io/tribock/go-via:latest --load .
 
-docker run -p 8443:8443 docker.io/library/my-container:latest
+docker run -p 8443:8443 ghcr.io/tribock/go-via:latest
 
 #TODO: add registry and makefile
 ```
+
 
 Todo
 -----
