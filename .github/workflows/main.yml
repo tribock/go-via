@@ -20,4 +20,4 @@ jobs:
         run: |
           docker buildx build \
             --tag ghcr.io/tribock/go-via:latest \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 .
+            --platform linux/amd64,linux/arm64 .

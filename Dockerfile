@@ -23,10 +23,9 @@ RUN CGO_ENABLED=1 go build -o manager .
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot
-WORKDIR /
-COPY --from=builder /workspace/manager .
-USER 65532:65532
+FROM golang:1.23
+WORKDIR /app
+COPY --from=builder /workspace/manager /app/manager
 
 
-ENTRYPOINT ["/manager"]
+ENTRYPOINT ["/app/manager"]
