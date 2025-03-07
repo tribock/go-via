@@ -4,6 +4,7 @@ ARG TARGETOS
 ARG TARGETARCH
 # Accept version as a build argument
 ARG CI_COMMIT_TAG
+ARG DATE
 
 # Set environment variable with the provided version
 ENV VERSION=$CI_COMMIT_TAG
@@ -19,14 +20,12 @@ COPY . .
 # was called. For example, if we call make docker-build in a local env which has the Apple Silicon M1 SO
 # the docker BUILDPLATFORM arg will be linux/arm64 when for Apple x86 it will be linux/amd64. Therefore,
 # by leaving it empty we can ensure that the container and binary shipped on it will have the same platform.
-RUN CGO_ENABLED=1 go build -ldflags "-X main.commit=${VERSION} -X main.date=$(date -u +'%Y-%m-%dT')" -o /workspace/manager .
+RUN CGO_ENABLED=1 go build -ldflags "-X main.commit=${VERSION} -X main.date=${DATE}" -o /workspace/manager .
 
-# Use alpine as minimal base image to package the manager binary
-FROM ubuntu:20.04
+# Use distroless as minimal base image to package the manager binary
+FROM gcr.io/distroless/base
 WORKDIR /app
 COPY --from=builder /workspace/manager /app/manager
 
-# Ensure the binary has execute permissions
-RUN chmod +x /app/manager
 
 ENTRYPOINT ["/app/manager"]
