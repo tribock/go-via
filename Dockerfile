@@ -8,7 +8,7 @@ ARG DATE
 
 # Set environment variable with the provided version
 ENV VERSION=$CI_COMMIT_TAG
-
+ENV DATE=$DATE
 WORKDIR /workspace
 
 # Copy the go source

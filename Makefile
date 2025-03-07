@@ -92,8 +92,8 @@ build: manifests generate  fmt vet ## Build manager binary.
 	go build -o bin/manager app/main.go
 
 .PHONY: run
-run: generate fmt vet docker-build ## Run a controller from your host.
-	docker run -p 8443:8443 ${IMG}-multiarch
+run: docker-build ## Run a controller from your host.
+	docker run -p 8443:8443 ${IMG}
 
 .PHONY: devrun
 devrun:  ## Run a controller from your host.
@@ -105,9 +105,9 @@ devrun-web:  ## Run a controller from your host.
 # If you wish built the manager image targeting other platforms you can use the --platform flag.
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
-.PHONY: docker-build
-docker-build:  ## Build docker image with the manager.
-	CI_COMMIT_TAG=${VERSION}  DATE=${TODAY} docker buildx build --push --platform linux/arm64/v8,linux/amd64 . -t ${IMG}
+.PHONY:   docker-build
+docker-build:   generate fmt vet ## Build docker image with the manager.
+	docker buildx build --build-arg CI_COMMIT_TAG=${VERSION} --build-arg DATE=${TODAY} --push --platform linux/arm64/v8,linux/amd64 . -t ${IMG}
 
 .PHONY: docker-build-push
 docker-build-push: docker-build ## Push docker image with the manager.

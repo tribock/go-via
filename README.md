@@ -251,6 +251,9 @@ docker buildx build --platform linux/amd64 --tag ghcr.io/tribock/go-via:latest -
 
 docker run -p 8443:8443 ghcr.io/tribock/go-via:latest
 
+
+go run -ldflags "-X main.commit=1.9 -X main.date=Heute"  *.go
+
 #TODO: add registry and makefile
 ```
 
