@@ -35,9 +35,8 @@ import (
 )
 
 var (
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
+	commit = "none"
+	date   = "unknown"
 )
 
 // @title go-via
@@ -53,9 +52,8 @@ func main() {
 
 	//setup logging
 	logrus.WithFields(logrus.Fields{
-		"version": version,
-		"commit":  commit,
-		"date":    date,
+		"commit": commit,
+		"date":   date,
 	}).Infof("Startup")
 
 	//enable config
@@ -322,7 +320,7 @@ func main() {
 
 		v1.GET("log", logServer.Handle)
 
-		v1.GET("version", api.Version(version, commit, date))
+		v1.GET("version", api.Version(commit, date))
 	}
 
 	/*	r.GET("postconfig", api.PostConfig) */

@@ -96,10 +96,8 @@ run: generate fmt vet docker-build ## Run a controller from your host.
 
 .PHONY: devrun
 devrun:  ## Run a controller from your host.
-	kubectl get ns cluster-epgksss8x9  || kubectl create ns cluster-epgksss8x9 
-	kubectl get ns k8s-operators  || kubectl create ns k8s-operators 
-	kubectl get ns  ispo || kubectl create ns ispo
-	DNS_PROVIDER=gcp ENV=SWISSICTEST LOG_LEVEL=DEBUG go run -ldflags "-X main.version=${VERSION}" ./app/main.go --metrics-bind-address=:6080 --health-probe-bind-address=:6081
+	go run *.go
+
 .PHONY: devrun-web
 devrun-web:  ## Run a controller from your host.
 	INSECURE=true go run app/api/main.go 
