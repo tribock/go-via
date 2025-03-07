@@ -2,7 +2,7 @@
 # Image URL to use all building/pushing image targets
 VERSION = $(shell git describe --tags )
 IMG = ghcr.io/tribock/go-via:$(VERSION)
-TODAY = $(date -u +'%Y-%m-%d')
+TODAY = $(shell date -u +'%Y-%m-%d')
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.26.0
 
@@ -107,7 +107,7 @@ devrun-web:  ## Run a controller from your host.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
 docker-build:  ## Build docker image with the manager.
-	CI_COMMIT_TAG=${VERSION}  DATE=$(date -u +'%Y-%m-%dT') docker buildx build --push --platform linux/arm64/v8,linux/amd64 . -t ${IMG}
+	CI_COMMIT_TAG=${VERSION}  DATE=${TODAY} docker buildx build --push --platform linux/arm64/v8,linux/amd64 . -t ${IMG}
 
 .PHONY: docker-build-push
 docker-build-push: docker-build ## Push docker image with the manager.
@@ -115,7 +115,7 @@ docker-build-push: docker-build ## Push docker image with the manager.
 	docker tag ${CERT_IMG} ${CERT_LATEST_PUB}
 	docker push ${CERT_IMG}
 	docker push ${CERT_LATEST_PUB}
-	VERSION=$(VERSION) envsubst < zarf/config/manager/kustomization.tmpl >  zarf/config/manager/kustomization.yaml
+	VERSION=$(VERSION) DATE=${TODAY} envsubst < zarf/config/manager/kustomization.tmpl >  zarf/config/manager/kustomization.yaml
 	VERSION=$(VERSION) envsubst < zarf/k8s/base/kustomization.tmpl >  zarf/k8s/base/kustomization.yaml
 
 

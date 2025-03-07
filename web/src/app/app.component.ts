@@ -18,7 +18,10 @@ export class AppComponent {
   ngOnInit(): void {
     this.apiService.getVersion().subscribe((data: any) => {
       this.version = data;
+      console.log(this.version);
     });
 
   }
 }
+
+
