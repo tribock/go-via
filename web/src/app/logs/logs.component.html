@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of data">
+        <tr *ngFor="let row of data" class="row">
           <td class="time"> {{ row.time }} </td>
           <td [ngClass]="{'info': row.level == 'info', 'debug': row.level == 'debug', 'warning': row.level == 'warning'}" class="level"> 
             {{ row.level }} 

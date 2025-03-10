@@ -6,61 +6,68 @@
     overflow-y: auto;
 }
   
-  .table-container {
+.table-container {
     width: 100%;
     overflow-y: auto;
-  }
+}
   
-  table {
+table {
     width: 100%;
     table-layout: fixed; /* Fix the column width */
     border-collapse: collapse; /* Remove gaps between cells */
-  }
+}
   
-  th, td {
-    padding: 8px;
+th, td {
+    padding: 0; /* Remove padding to ensure height is respected */
     text-align: left;
     vertical-align: middle;
     border: 1px solid #ddd; /* Optional: Adds a border for readability */
-  }
+    height: 15px !important; /* Fix the cell height to 15px */
+    line-height: 15px !important; /* Ensure text is vertically centered */
+}
   
-  th {
+th {
     background-color: #f2f2f2; /* Add a background color for headers */
     position: sticky;
     top: 0; /* Keeps the header fixed on top when scrolling */
     z-index: 1; /* Ensures header stays above content */
-  }
+}
   
-  .info {
+.info {
     background: lightgray;
-  }
+}
   
-  .debug {
+.debug {
     background: orange;
-  }
+}
   
-  .warning { 
+.warning { 
     background: yellow;
-  }
+}
   
-  .service {
+.service {
     background: #e6ffff;
-  }
+}
   
-  /* Optional: Set fixed widths for the columns */
-  th:nth-child(1), td:nth-child(1) {
+/* Optional: Set fixed widths for the columns */
+th:nth-child(1), td:nth-child(1) {
     width: 20%; /* Time column */
-  }
+}
   
-  th:nth-child(2), td:nth-child(2) {
+th:nth-child(2), td:nth-child(2) {
     width: 15%; /* Level column */
-  }
+}
   
-  th:nth-child(3), td:nth-child(3) {
+th:nth-child(3), td:nth-child(3) {
     width: 30%; /* Service column */
-  }
+}
   
-  th:nth-child(4), td:nth-child(4) {
+th:nth-child(4), td:nth-child(4) {
     width: 35%; /* Payload column */
-  }
+}
   
+tr {
+    height: 15px !important; /* Fix the row height to 15px */
+    line-height: 15px !important; /* Ensure text is vertically centered */
+}
+
