@@ -1,3 +1,10 @@
+@use '@cds/core/tokens/tokens.scss';
+
+.limit-height clr-datagrid {
+  height: 15rem;
+}
+
+
 #wrapper {
     width: 100%;
     display: flex;

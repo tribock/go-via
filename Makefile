@@ -1,4 +1,3 @@
-
 # Image URL to use all building/pushing image targets
 VERSION = $(shell git describe --tags )
 IMG = ghcr.io/tribock/go-via:$(VERSION)
@@ -88,7 +87,7 @@ test:  ## Run tests.
 ##@ Build
 
 .PHONY: build
-build: manifests generate  fmt vet ## Build manager binary.
+build: manifests generate fmt vet statik ## Build manager binary.
 	go build -o bin/manager app/main.go
 
 .PHONY: run
@@ -105,8 +104,8 @@ devrun-web:  ## Run a controller from your host.
 # If you wish built the manager image targeting other platforms you can use the --platform flag.
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
-.PHONY:   docker-build
-docker-build:   generate fmt vet ## Build docker image with the manager.
+.PHONY: docker-build
+docker-build: generate fmt vet statik ## Build docker image with the manager.
 	docker buildx build --build-arg CI_COMMIT_TAG=${VERSION} --build-arg DATE=${TODAY} --push --platform linux/arm64/v8,linux/amd64 . -t ${IMG}
 
 .PHONY: docker-build-push
@@ -115,9 +114,8 @@ docker-build-push: docker-build ## Push docker image with the manager.
 	docker tag ${CERT_IMG} ${CERT_LATEST_PUB}
 	docker push ${CERT_IMG}
 	docker push ${CERT_LATEST_PUB}
-	VERSION=$(VERSION) DATE=${TODAY} envsubst < zarf/config/manager/kustomization.tmpl >  zarf/config/manager/kustomization.yaml
-	VERSION=$(VERSION) envsubst < zarf/k8s/base/kustomization.tmpl >  zarf/k8s/base/kustomization.yaml
-
+	VERSION=$(VERSION) DATE=${TODAY} envsubst < zarf/config/manager/kustomization.tmpl > zarf/config/manager/kustomization.yaml
+	VERSION=$(VERSION) envsubst < zarf/k8s/base/kustomization.tmpl > zarf/k8s/base/kustomization.yaml
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
@@ -125,9 +123,8 @@ docker-push: ## Push docker image with the manager.
 	docker tag ${CERT_IMG} ${CERT_LATEST_PUB}
 	docker push ${CERT_IMG}
 	docker push ${CERT_LATEST_PUB}
-	VERSION=$(VERSION) DATE=${TODAY} envsubst < zarf/config/manager/kustomization.tmpl >  zarf/config/manager/kustomization.yaml
-	VERSION=$(VERSION) envsubst < zarf/k8s/base/kustomization.tmpl >  zarf/k8s/base/kustomization.yaml
-
+	VERSION=$(VERSION) DATE=${TODAY} envsubst < zarf/config/manager/kustomization.tmpl > zarf/config/manager/kustomization.yaml
+	VERSION=$(VERSION) envsubst < zarf/k8s/base/kustomization.tmpl > zarf/k8s/base/kustomization.yaml
 
 # PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
 # architectures. (i.e. make docker-buildx IMG=myregistry/mypoperator:0.0.1). To use this option you need to:
@@ -201,4 +198,8 @@ $(KUSTOMIZE): $(LOCALBIN)
 		rm -rf $(LOCALBIN)/kustomize; \
 	fi
 	test -s $(LOCALBIN)/kustomize || { curl -Ss $(KUSTOMIZE_INSTALL_SCRIPT) | bash -s -- $(subst v,,$(KUSTOMIZE_VERSION)) $(LOCALBIN); }
+
+.PHONY: statik
+statik: ## Embed static files using statik
+	statik -src=./web/src/assets -dest=./app/statik
 
