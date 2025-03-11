@@ -183,8 +183,7 @@ func main() {
 			logrus.WithFields(logrus.Fields{
 				"login": "unauthorized request",
 			}).Info("auth")
-			c.Writer.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.Redirect(http.StatusFound, "/login")
 			return
 		}
 
@@ -195,8 +194,7 @@ func main() {
 				"username": username,
 				"status":   "supplied username does not exist",
 			}).Info("auth")
-			c.Writer.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.Redirect(http.StatusFound, "/login")
 			return
 		}
 
@@ -211,8 +209,7 @@ func main() {
 				"username": username,
 				"status":   "invalid password supplied",
 			}).Info("auth")
-			c.Writer.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.Redirect(http.StatusFound, "/login")
 			return
 		}
 		c.Next()

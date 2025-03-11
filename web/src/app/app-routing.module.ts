@@ -5,6 +5,7 @@ import { ManageDhcpPoolsComponent } from './manage-dhcp-pools/manage-dhcp-pools.
 import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
 import { ManageImagesComponent } from './manage-images/manage-images.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { LoginComponent } from './login/login.component';
 import { LogsComponent } from './logs/logs.component';
 
 
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'manage-users', component: ManageUsersComponent },
   { path: 'help', component: HelpComponent },
   { path: 'logs', component: LogsComponent },
+  { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
   { path: '', component: ManageDhcpPoolsComponent },
 ];
 
