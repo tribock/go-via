@@ -14,10 +14,14 @@ export class AuthService {
 
     const body = { username, password };
 
-    return this.httpClient.post(
+    var resp = this.httpClient.post(
       'https://' + window.location.host + '/v1/login',
       body
     );
+
+
+
+    return resp
   }
 
   logout(): void {

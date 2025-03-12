@@ -28,19 +28,19 @@ export class LoginComponent {
 
   login() {
 
-    this.authService.login(this.form.username, this.form.password).subscribe((resp: any) => {
-      if (resp.error) {
-        this.errorMessage = resp.error;
-        this.errorMessage += '\nInvalid username or password';
-        console.log(this.errorMessage);
+    this.authService.login(this.form.username, this.form.password).subscribe(
+      (resp: any) => {
+
+          console.log('Login successful');
+          this.router.navigate(['/']);
+    
+      },
+      (error) => {
+        console.log(error);
+        this.errorMessage = "Invalid username or password";
         this.router.navigate(['/login']);
       }
-      if (resp) {
-        console.log(resp)
-        console.log('Login successful');
-        this.router.navigate(['/']);
-      }
-    });
+    );
 
   }
 }

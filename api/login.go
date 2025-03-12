@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func Login(c *gin.Context) {
 			"status":   "supplied username does not exist",
 		}).Info("auth")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username or password"})
-		c.Redirect(http.StatusUnauthorized, "/login")
+		Error(c, http.StatusUnauthorized, fmt.Errorf("supplied username does not exist")) // 404
 		return
 	}
 	if ComparePasswords(dbUser.Password, []byte(user.Password), user.Username) {
@@ -39,6 +40,7 @@ func Login(c *gin.Context) {
 		}).Debug("auth")
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username or password"})
+		Error(c, http.StatusUnauthorized, fmt.Errorf("supplied username does not exist"))
 		return
 	}
 
