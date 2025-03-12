@@ -176,44 +176,56 @@ func main() {
 	// ks.cfg is served at top to not place it behind BasicAuth
 	r.GET("ks.cfg", api.Ks(key))
 
-	// middleware to check if user is logged in
-	r.Use(func(c *gin.Context) {
-		username, password, hasAuth := c.Request.BasicAuth()
-		if !hasAuth {
-			logrus.WithFields(logrus.Fields{
-				"login": "unauthorized request",
-			}).Info("auth")
-			c.Redirect(http.StatusFound, "/login")
-			return
-		}
+	// // Exclude the /login route from the authentication middleware
+	// r.POST("/login", func(c *gin.Context) {
+	// 	// Handle login logic here
+	// 	// For example, validate the username and password, and set a session or token
+	// })
 
-		//get the user that is trying to authenticate
-		var user models.User
-		if res := db.DB.Select("username", "password").Where("username = ?", username).First(&user); res.Error != nil {
-			logrus.WithFields(logrus.Fields{
-				"username": username,
-				"status":   "supplied username does not exist",
-			}).Info("auth")
-			c.Redirect(http.StatusFound, "/login")
-			return
-		}
+	// // middleware to check if user is logged in
+	// r.Use(func(c *gin.Context) {
+	// 	if c.Request.URL.Path == "/login" {
+	// 		log.Println("HODOOOOOOOOOR")
+	// 		c.Next()
+	// 		return
+	// 	}
 
-		//check if passwords match
-		if api.ComparePasswords(user.Password, []byte(password), username) {
-			logrus.WithFields(logrus.Fields{
-				"username": username,
-				"status":   "successfully authenticated",
-			}).Debug("auth")
-		} else {
-			logrus.WithFields(logrus.Fields{
-				"username": username,
-				"status":   "invalid password supplied",
-			}).Info("auth")
-			c.Redirect(http.StatusFound, "/login")
-			return
-		}
-		c.Next()
-	})
+	// 	username, password, hasAuth := c.Request.BasicAuth()
+	// 	if !hasAuth {
+	// 		logrus.WithFields(logrus.Fields{
+	// 			"login": "unauthorized request",
+	// 		}).Info("auth")
+	// 		c.Redirect(http.StatusFound, "/login")
+	// 		return
+	// 	}
+
+	// 	//get the user that is trying to authenticate
+	// 	var user models.User
+	// 	if res := db.DB.Select("username", "password").Where("username = ?", username).First(&user); res.Error != nil {
+	// 		logrus.WithFields(logrus.Fields{
+	// 			"username": username,
+	// 			"status":   "supplied username does not exist",
+	// 		}).Info("auth")
+	// 		c.Redirect(http.StatusFound, "/login")
+	// 		return
+	// 	}
+
+	// 	//check if passwords match
+	// 	if api.ComparePasswords(user.Password, []byte(password), username) {
+	// 		logrus.WithFields(logrus.Fields{
+	// 			"username": username,
+	// 			"status":   "successfully authenticated",
+	// 		}).Debug("auth")
+	// 	} else {
+	// 		logrus.WithFields(logrus.Fields{
+	// 			"username": username,
+	// 			"status":   "invalid password supplied",
+	// 		}).Info("auth")
+	// 		c.Redirect(http.StatusFound, "/login")
+	// 		return
+	// 	}
+	// 	c.Next()
+	// })
 
 	statikFS, err := fs.New()
 	if err != nil {

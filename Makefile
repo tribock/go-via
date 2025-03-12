@@ -95,7 +95,7 @@ run: docker-build ## Run a controller from your host.
 	docker run -p 8443:8443 ${IMG}
 
 .PHONY: devrun
-devrun:  ## Run a controller from your host.
+devrun:  generate ## Run a controller from your host.
 	go run *.go
 
 .PHONY: devrun-web
