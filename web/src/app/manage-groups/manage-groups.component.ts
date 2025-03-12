@@ -30,13 +30,15 @@ import { id } from '@cds/core/internal';
     standalone: false
 })
 export class ManageGroupsComponent implements OnInit {
-  hosts;
+  hosts: any[] = [];
   host;
-  images;
-  errors;
-  groups;
+  groups: any[] = [];
+  pools: any[] = [];
+  images: any[] = [];
+  errors: any;
+
   group;
-  pools;
+
   advanced;
   Hostform: UntypedFormGroup;
   Groupform: UntypedFormGroup;
@@ -85,7 +87,8 @@ export class ManageGroupsComponent implements OnInit {
         this.apiService.getGroups().subscribe((groups: any) => {
           this.apiService.getHosts().subscribe((hosts: any) => {
             this.groups = groups.map(item => {
-              item.hosts = hosts.filter(host => host.group_id === item.id)
+              item.ks = atob(item.ks)
+              item.hosts = hosts.filter(host => host.group_id === item.id) || []; // Ensure hosts array is initialized
               return item
             });
             hosts.forEach(host => {

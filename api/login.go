@@ -28,6 +28,7 @@ func Login(c *gin.Context) {
 			"status":   "supplied username does not exist",
 		}).Info("auth")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username or password"})
+		c.Redirect(http.StatusUnauthorized, "/login")
 		return
 	}
 	if ComparePasswords(dbUser.Password, []byte(user.Password), user.Username) {

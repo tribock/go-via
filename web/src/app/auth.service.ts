@@ -8,26 +8,16 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
   private isAuthenticated = false;
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private httpClient: HttpClient) {}
 
-  login(username: string, password: string): Promise<boolean> {
-    const url = 'https://localhost:8443/v1/login';
+  login(username: string, password: string) {
+
     const body = { username, password };
 
-    return this.http.post<{ success: boolean }>(url, body).toPromise()
-      .then(response => {
-        if (response.success) {
-          console.log('Login successful');
-          this.isAuthenticated = true;
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch(error => {
-        console.error('Login failed', error);
-        return false;
-      });
+    return this.httpClient.post(
+      'https://' + window.location.host + '/v1/login',
+      body
+    );
   }
 
   logout(): void {

@@ -155,7 +155,9 @@ func CreateImage(conf *config.Config) func(c *gin.Context) {
 			fp := path.Join(".", "tftp", fn)
 
 			if err = util.ExtractImageToDirectory(f, fp); err != nil {
-				log.Fatalf("failed to extract image: %s", err)
+				logrus.Errorf("failed to extract image: %s", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("failed to extract image: %s", err)})
+				return
 			}
 
 			//remove the file
