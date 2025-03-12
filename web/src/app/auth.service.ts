@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -7,18 +8,26 @@ import { Router } from '@angular/router';
 export class AuthService {
   private isAuthenticated = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
-  login(username: string, password: string): boolean {
-    // Implement your login logic here
-    // For example, validate the username and password
-    if (username === 'admin' && password === 'admin') {
-      console.log('Login successful');
-      this.isAuthenticated = true;
-      return true;
-    } else {
-      return false;
-    }
+  login(username: string, password: string): Promise<boolean> {
+    const url = 'https://localhost:8443/v1/login';
+    const body = { username, password };
+
+    return this.http.post<{ success: boolean }>(url, body).toPromise()
+      .then(response => {
+        if (response.success) {
+          console.log('Login successful');
+          this.isAuthenticated = true;
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch(error => {
+        console.error('Login failed', error);
+        return false;
+      });
   }
 
   logout(): void {

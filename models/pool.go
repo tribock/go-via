@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/maxiepax/go-via/db"
+	"github.com/tribock/go-via/db"
 	"gorm.io/gorm"
 )
 

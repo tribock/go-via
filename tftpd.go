@@ -27,10 +27,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/maxiepax/go-via/config"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
 	"github.com/sirupsen/logrus"
+	"github.com/tribock/go-via/config"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
 	"gorm.io/gorm/clause"
 
 	"github.com/pin/tftp"

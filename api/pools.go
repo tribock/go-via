@@ -9,8 +9,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
 	"gorm.io/gorm"
 )
 

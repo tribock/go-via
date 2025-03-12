@@ -19,10 +19,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
 	"github.com/kdomanski/iso9660/util"
-	"github.com/maxiepax/go-via/config"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
 	"github.com/sirupsen/logrus"
+	"github.com/tribock/go-via/config"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
 	"gorm.io/gorm"
 )
 

@@ -29,7 +29,7 @@ dockers:
  - ids:
     - go-via
    image_templates:
-    - "docker.io/maxiepax/go-via:latest"
+    - "docker.io/tribock/go-via:latest"
    build_flag_templates:
     - "--pull"
     - "--label=org.opencontainers.image.created={{.Date}}"

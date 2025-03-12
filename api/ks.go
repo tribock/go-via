@@ -10,10 +10,10 @@ import (
 	"encoding/base64"
 
 	"github.com/gin-gonic/gin"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
-	"github.com/maxiepax/go-via/secrets"
 	"github.com/sirupsen/logrus"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
+	"github.com/tribock/go-via/secrets"
 	"gorm.io/gorm/clause"
 )
 

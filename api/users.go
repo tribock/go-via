@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
 	"github.com/sirupsen/logrus"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )

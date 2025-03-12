@@ -56,7 +56,7 @@ Option A: create the following docker-compose.yaml file to not specify a config 
 version: "3.9"
 services:
   go-via:
-    image: maxiepax/go-via:latest
+    image: tribock/go-via:latest
     network_mode: host
     volumes:
       - ./tftp:/go/tftp
@@ -72,7 +72,7 @@ Option B: or create this docker-compose.yaml to specify a config file, and place
 version: "3.9"
 services:
   go-via:
-    image: maxiepax/go-via:latest
+    image: tribock/go-via:latest
     network_mode: host
     volumes:
       - ./tftp:/go/tftp
@@ -105,7 +105,7 @@ Most linux distributions should work, this has been tested on Ubuntu 20.20.
 
 ``` bash
 #wget the release you want to download, e.g go-via_.<release>_linux_amd64.tar.gz
-wget https://github.com/maxiepax/go-via/releases/download/<release>/go-via_.<release>_linux_amd64.tar.gz
+wget https://github.com/tribock/go-via/releases/download/<release>/go-via_.<release>_linux_amd64.tar.gz
 
 
 #untar/extract it
@@ -197,7 +197,7 @@ terminal 1:
 ``` bash
 mkdir ~/go
 cd ~/go
-git clone https://github.com/maxiepax/go-via.git
+git clone https://github.com/tribock/go-via.git
 cd go-via
 go run *.go
 ```
@@ -254,7 +254,11 @@ docker run -p 8443:8443 ghcr.io/tribock/go-via:latest
 
 go run -ldflags "-X main.commit=1.9 -X main.date=Heute"  *.go
 
-#TODO: add registry and makefile
+# test auth
+curl -X POST https://localhost:8443/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "VMware1!"}' -ivk
+
 ```
 
 

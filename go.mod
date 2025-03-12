@@ -1,4 +1,4 @@
-module github.com/maxiepax/go-via
+module github.com/tribock/go-via
 
 go 1.23.3
 

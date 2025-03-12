@@ -96,7 +96,7 @@ run: docker-build ## Run a controller from your host.
 
 .PHONY: devrun
 devrun:  generate ## Run a controller from your host.
-	go run *.go
+	export LOG_LEVEL=DEBUG; go run -ldflags "-X main.commit=${VERSION} -X main.date=${TODAY}" *.go
 
 .PHONY: devrun-web
 devrun-web:  ## Run a controller from your host.

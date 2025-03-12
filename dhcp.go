@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/google/gopacket/layers"
-	"github.com/maxiepax/go-via/api"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
 	"github.com/sirupsen/logrus"
+	"github.com/tribock/go-via/api"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
 	"gorm.io/gorm"
 )
 

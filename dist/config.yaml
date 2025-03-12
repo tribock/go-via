@@ -50,7 +50,7 @@ dockers:
     goamd64: v1
     dockerfile: Dockerfile
     image_templates:
-      - docker.io/maxiepax/go-via:latest
+      - docker.io/tribock/go-via:latest
     build_flag_templates:
       - --pull
       - --label=org.opencontainers.image.created={{.Date}}

@@ -11,13 +11,13 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/maxiepax/go-via/api"
-	"github.com/maxiepax/go-via/config"
-	ca "github.com/maxiepax/go-via/crypto"
-	"github.com/maxiepax/go-via/db"
-	"github.com/maxiepax/go-via/models"
-	"github.com/maxiepax/go-via/secrets"
-	"github.com/maxiepax/go-via/websockets"
+	"github.com/tribock/go-via/api"
+	"github.com/tribock/go-via/config"
+	ca "github.com/tribock/go-via/crypto"
+	"github.com/tribock/go-via/db"
+	"github.com/tribock/go-via/models"
+	"github.com/tribock/go-via/secrets"
+	"github.com/tribock/go-via/websockets"
 
 	"github.com/gin-contrib/static"
 
@@ -28,10 +28,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koding/multiconfig"
 
-	_ "github.com/maxiepax/go-via/docs"
-	_ "github.com/maxiepax/go-via/statik"
 	"github.com/rakyll/statik/fs"
 	"github.com/sirupsen/logrus"
+	_ "github.com/tribock/go-via/docs"
+	_ "github.com/tribock/go-via/statik"
 )
 
 var (
@@ -49,7 +49,7 @@ func main() {
 
 	logServer := websockets.NewLogServer()
 	logrus.AddHook(logServer.Hook)
-
+	ConfigureLogger()
 	//setup logging
 	logrus.WithFields(logrus.Fields{
 		"commit": commit,
@@ -176,57 +176,6 @@ func main() {
 	// ks.cfg is served at top to not place it behind BasicAuth
 	r.GET("ks.cfg", api.Ks(key))
 
-	// // Exclude the /login route from the authentication middleware
-	// r.POST("/login", func(c *gin.Context) {
-	// 	// Handle login logic here
-	// 	// For example, validate the username and password, and set a session or token
-	// })
-
-	// // middleware to check if user is logged in
-	// r.Use(func(c *gin.Context) {
-	// 	if c.Request.URL.Path == "/login" {
-	// 		log.Println("HODOOOOOOOOOR")
-	// 		c.Next()
-	// 		return
-	// 	}
-
-	// 	username, password, hasAuth := c.Request.BasicAuth()
-	// 	if !hasAuth {
-	// 		logrus.WithFields(logrus.Fields{
-	// 			"login": "unauthorized request",
-	// 		}).Info("auth")
-	// 		c.Redirect(http.StatusFound, "/login")
-	// 		return
-	// 	}
-
-	// 	//get the user that is trying to authenticate
-	// 	var user models.User
-	// 	if res := db.DB.Select("username", "password").Where("username = ?", username).First(&user); res.Error != nil {
-	// 		logrus.WithFields(logrus.Fields{
-	// 			"username": username,
-	// 			"status":   "supplied username does not exist",
-	// 		}).Info("auth")
-	// 		c.Redirect(http.StatusFound, "/login")
-	// 		return
-	// 	}
-
-	// 	//check if passwords match
-	// 	if api.ComparePasswords(user.Password, []byte(password), username) {
-	// 		logrus.WithFields(logrus.Fields{
-	// 			"username": username,
-	// 			"status":   "successfully authenticated",
-	// 		}).Debug("auth")
-	// 	} else {
-	// 		logrus.WithFields(logrus.Fields{
-	// 			"username": username,
-	// 			"status":   "invalid password supplied",
-	// 		}).Info("auth")
-	// 		c.Redirect(http.StatusFound, "/login")
-	// 		return
-	// 	}
-	// 	c.Next()
-	// })
-
 	statikFS, err := fs.New()
 	if err != nil {
 		logrus.Fatal(err)
@@ -325,6 +274,11 @@ func main() {
 		{
 			postconfig.GET("", api.PostConfig(key))
 			postconfig.GET(":id", api.PostConfigID(key))
+		}
+
+		login := v1.Group("/login")
+		{
+			login.POST("", api.Login)
 		}
 
 		v1.GET("log", logServer.Handle)
