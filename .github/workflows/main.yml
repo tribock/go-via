@@ -34,7 +34,7 @@ jobs:
           driver: docker-container
       - name: build the image
         run: |
-          docker buildx build --push \
+          docker buildx build --push --build-arg CI_COMMIT_TAG=${{ steps.get_version.outputs.VERSION }} \
             --tag ghcr.io/tribock/go-via:${{ steps.get_version.outputs.VERSION }} \
             --platform linux/amd64,linux/arm64 .
 
