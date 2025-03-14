@@ -6,6 +6,7 @@
       <div class="branding">
         <span class="title">soulDeploy {{ version?.Version }} - version {{ version?.Commit}}  </span>
       </div>
+      <button class="btn btn-primary" (click)="logout()">Logout</button>
     </header>
     <ng-container *ngIf="router.url !== '/login'">
       <div class="content-container">
