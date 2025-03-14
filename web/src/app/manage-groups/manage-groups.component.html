@@ -23,8 +23,10 @@
 
 <div *ngFor="let group of groups">
     <h6>{{group.name}}</h6>
-
-    <clr-datagrid>
+    <button class="btn btn-outline btn-sm" (click)="toggleDatagrid(group.id)">
+        {{ isDatagridVisible(group.id) ? 'Hide' : 'Show' }} Hosts
+    </button>
+    <clr-datagrid  *ngIf="isDatagridVisible(group.id)">
         <clr-dg-column>fqdn</clr-dg-column>
         <clr-dg-column>ip address</clr-dg-column>
         <clr-dg-column>mac address</clr-dg-column>

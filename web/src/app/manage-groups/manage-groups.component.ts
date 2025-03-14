@@ -50,6 +50,8 @@ export class ManageGroupsComponent implements OnInit {
   progress = {};
   progresstext = {};
 
+  visibleDatagrids: { [key: string]: boolean } = {};
+
   constructor(private apiService: ApiService, private HostformBuilder: UntypedFormBuilder, private GroupformBuilder: UntypedFormBuilder) {
     this.Hostform = this.HostformBuilder.group({
       fqdn: ['', [Validators.required]],
@@ -102,6 +104,7 @@ export class ManageGroupsComponent implements OnInit {
     })
   }
 
+
   ngOnInit(): void {
     this.apiService.getGroups().subscribe((groups: any) => {
       this.apiService.getHosts().subscribe((hosts: any) => {
@@ -124,6 +127,15 @@ export class ManageGroupsComponent implements OnInit {
     });
   }
 
+
+
+  toggleDatagrid(groupId: string) {
+    this.visibleDatagrids[groupId] = !this.visibleDatagrids[groupId];
+  }
+
+  isDatagridVisible(groupId: string): boolean {
+    return !!this.visibleDatagrids[groupId];
+  }
   submitGroup() {
     const data = {
       ...this.Groupform.value,
