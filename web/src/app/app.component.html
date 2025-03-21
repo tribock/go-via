@@ -4,11 +4,25 @@
     <header class="header-6">
       <img src="assets/soultec_logo_web.png" alt="SoulTec Logo" class="logo" />
       <div class="branding">
-        <span class="title">soulDeploy {{ version?.Version }} - version {{ version?.Commit}}  </span>
+        <span class="title">soulDeploy</span>
       </div>
-      <button class="btn btn-primary" (click)="logout()">Logout</button>
+      <div   *ngIf="router.url !== '/login'" class="header-actions">
+        <clr-dropdown>
+          <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
+            {{ username }}
+            <cds-icon shape="angle" direction="down"></cds-icon>
+          </button>
+          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a  class="btn btn-outline btn-sm" (click)="showAboutModel('true')"clrDropdownItem>About</a>
+            <a class="btn btn-primary" (click)="logout()" clrDropdownItem>Logout</a>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </div>
     </header>
+    
     <ng-container *ngIf="router.url !== '/login'">
+
+
       <div class="content-container">
         <clr-vertical-nav>
           <a clrVerticalNavLink routerLink="./manage-dhcp-pools" routerLinkActive="active">DHCP Pools</a>
@@ -19,6 +33,14 @@
           <a clrVerticalNavLink routerLink="./logs" routerLinkActive="active">Logs</a>
         </clr-vertical-nav>
         <div class="content-area">
+          <clr-modal [(clrModalOpen)]="showAbout">
+            <h3 *ngIf="showAbout === true" class="modal-title">About</h3>
+            <div class="modal-body">
+
+                    <label class="clr-col-8 form-input">soulDeploy {{ version?.Version }} - version {{ version?.Commit}}</label>
+
+            </div>
+          </clr-modal>
           <router-outlet></router-outlet>
         </div>
       </div>

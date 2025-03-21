@@ -2,11 +2,18 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
+import { BehaviorSubject, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private isAuthenticated = false;
+  private usernameSubject = new BehaviorSubject<string>(localStorage.getItem('username') || '');
+  username$ = this.usernameSubject.asObservable();
+
 
   constructor(private router: Router, private httpClient: HttpClient) {}
 
@@ -19,6 +26,10 @@ export class AuthService {
       body
     );
 
+    this.usernameSubject.next(username);
+    localStorage.setItem('username', username);
+  
+
 
 
     return resp
@@ -26,6 +37,8 @@ export class AuthService {
 
   logout(): void {
     this.isAuthenticated = false;
+    this.usernameSubject.next('');
+    localStorage.removeItem('username');
     this.router.navigate(['/login']);
   }
 

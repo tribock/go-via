@@ -2,17 +2,6 @@
   <form class="login" (ngSubmit)="login()">
     <div class="login-header">
       <div class="logo"></div>
-      <div class="actions">
-        <clr-dropdown>
-          <button class="btn btn-link btn-sm" clrDropdownTrigger>
-            Language
-            <cds-icon shape="angle" direction="down"></cds-icon>
-          </button>
-          <clr-dropdown-menu>
-            <div aria-label="English" clrDropdownItem>English</div>
-          </clr-dropdown-menu>
-        </clr-dropdown>
-      </div>
     </div>
     <div class="login-body">
       <section class="title">
@@ -56,17 +45,13 @@
         </clr-checkbox-wrapper>
         <div *ngIf="errorMessage" class="error active">{{ errorMessage }}</div>
         <button type="submit" class="btn btn-primary">Log in</button>
-        <a href="javascript://" class="signup">Sign up for an account</a>
       </div>
     </div>
     <div class="login-footer">
       <span class="copyright">
-        Copyright © 2016-2025 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc.
+        Copyright © 2025 soulTec. All Rights Reserved. The term "soulTec" refers to Soultec AG.
         and/or its subsidiaries.
       </span>
-      <a href="javascript://">Terms</a>
-      <a href="javascript://">Privacy</a>
-      <a href="javascript://">California Privacy Rights</a>
     </div>
   </form>
 </div>

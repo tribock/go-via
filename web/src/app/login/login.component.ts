@@ -32,6 +32,8 @@ export class LoginComponent {
       (resp: any) => {
 
           console.log('Login successful');
+          localStorage.setItem('username', this.form.username); // Store the username
+        
           this.router.navigate(['/']);
     
       },
