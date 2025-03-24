@@ -13,7 +13,7 @@
     overflow-y: auto;
 }
   
-.table-container {
+.table {
     width: 100%;
     overflow-y: auto;
 }
@@ -24,21 +24,7 @@ table {
     border-collapse: collapse; /* Remove gaps between cells */
 }
   
-th, td {
-    padding: 0; /* Remove padding to ensure height is respected */
-    text-align: left;
-    vertical-align: middle;
-    border: 1px solid #ddd; /* Optional: Adds a border for readability */
-    height: 15px !important; /* Fix the cell height to 15px */
-    line-height: 15px !important; /* Ensure text is vertically centered */
-}
-  
-th {
-    background-color: #f2f2f2; /* Add a background color for headers */
-    position: sticky;
-    top: 0; /* Keeps the header fixed on top when scrolling */
-    z-index: 1; /* Ensures header stays above content */
-}
+
   
 .info {
     background: lightgray;

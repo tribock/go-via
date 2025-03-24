@@ -28,7 +28,8 @@ export class AuthService {
 
     this.usernameSubject.next(username);
     localStorage.setItem('username', username);
-  
+    this.isAuthenticated = true;
+    console.log(this.isAuthenticated);
 
 
 
@@ -43,6 +44,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
+    console.log(this.isAuthenticated);
     return this.isAuthenticated;
   }
 }

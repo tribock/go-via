@@ -22,16 +22,30 @@
     
     <ng-container *ngIf="router.url !== '/login'">
 
+      <nav class="subnav">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="./deployments" routerLinkActive="active">Deployments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="./health-checks" routerLinkActive="active">Health Checks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="./settings" routerLinkActive="active">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="./manage-users" routerLinkActive="active">Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="./help" routerLinkActive="active">Help</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="./logs" routerLinkActive="active">Logs</a>
+          </li>
+        </ul>
+      </nav>
 
       <div class="content-container">
-        <clr-vertical-nav>
-          <a clrVerticalNavLink routerLink="./manage-dhcp-pools" routerLinkActive="active">DHCP Pools</a>
-          <a clrVerticalNavLink routerLink="./manage-images" routerLinkActive="active">Images</a>
-          <a clrVerticalNavLink routerLink="./manage-groups" routerLinkActive="active">Deployments</a>
-          <a clrVerticalNavLink routerLink="./manage-users" routerLinkActive="active">Users</a>
-          <a clrVerticalNavLink routerLink="./help" routerLinkActive="active">Help</a>
-          <a clrVerticalNavLink routerLink="./logs" routerLinkActive="active">Logs</a>
-        </clr-vertical-nav>
         <div class="content-area">
           <clr-modal [(clrModalOpen)]="showAbout">
             <h3 *ngIf="showAbout === true" class="modal-title">About</h3>

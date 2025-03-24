@@ -16,7 +16,7 @@
     <clr-dg-footer>{{ data.length }} lines</clr-dg-footer>
   </clr-datagrid>
 </div> -->
-  <div class="table-container">
+  <div class="table">
     <table>
       <thead>
         <tr>
@@ -28,12 +28,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let row of data" class="row">
-          <td class="time"> {{ row.time }} </td>
-          <td [ngClass]="{'info': row.level == 'info', 'debug': row.level == 'debug', 'warning': row.level == 'warning'}" class="level"> 
+          <td class="time" class="left"> {{ row.time }} </td>
+          <td [ngClass]="{'info': row.level == 'info', 'debug': row.level == 'debug', 'warning': row.level == 'warning'}" class="level" class="left"> 
             {{ row.level }} 
           </td>
-          <td class="service"> {{ row.msg }} </td>
-          <td class="payload">
+          <td class="service" class="left"> {{ row.msg }} </td>
+          <td class="payload" class="left">
           <span *ngFor="let payload of row.payload | keyvalue">
             {{ payload.key }}: {{ payload.value }}<br>
           </span>
