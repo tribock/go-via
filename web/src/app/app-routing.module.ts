@@ -1,27 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HelpComponent } from './help/help.component';
-import { ManageDhcpPoolsComponent } from './manage-dhcp-pools/manage-dhcp-pools.component';
-import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
-import { ManageImagesComponent } from './manage-images/manage-images.component';
-import { ManageUsersComponent } from './manage-users/manage-users.component';
-import { LoginComponent } from './login/login.component';
-import { LogsComponent } from './logs/logs.component';
 import { DeploymentsComponent } from './deployments/deployments.component';
 import { HealthChecksComponent } from './health-checks/health-checks.component';
-
+import { SettingsComponent } from './settings/settings.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { HelpComponent } from './help/help.component';
+import { LogsComponent } from './logs/logs.component';
+import { LoginComponent } from './login/login.component';
+import { ManageDhcpPoolsComponent } from './manage-dhcp-pools/manage-dhcp-pools.component';
+import { ManageImagesComponent } from './manage-images/manage-images.component';
+import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
+import { WizardComponent } from './wizard/wizard.component';
 
 const routes: Routes = [
-  { path: 'manage-dhcp-pools', component: ManageDhcpPoolsComponent },
-  { path: 'manage-groups', component: ManageGroupsComponent },
-  { path: 'manage-images', component: ManageImagesComponent },
-  { path: 'manage-users', component: ManageUsersComponent },
-  { path: 'deployments', component: DeploymentsComponent },
+  { path: 'deployments', component: DeploymentsComponent, children: [
+    { path: '', redirectTo: 'manage-dhcp-pools', pathMatch: 'full' }, // Default child route
+    { path: 'manage-dhcp-pools', component: ManageDhcpPoolsComponent },
+    { path: 'manage-images', component: ManageImagesComponent },
+    { path: 'manage-groups', component: ManageGroupsComponent },
+    { path: 'wizard', component: WizardComponent },
+  ]},
   { path: 'health-checks', component: HealthChecksComponent },
-  { path: 'help', component: HelpComponent },
-  { path: 'logs', component: LogsComponent },
-  { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
-  { path: '', component: ManageDhcpPoolsComponent },
+  { path: 'settings', component: SettingsComponent , children: [
+    { path: '', redirectTo: 'help', pathMatch: 'full' }, // Default child route
+    { path: 'help', component: HelpComponent },
+    { path: 'manage-users', component: ManageUsersComponent },
+
+    { path: 'logs', component: LogsComponent },
+  ]},
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: '/deployments', pathMatch: 'full' }, // Default route
 ];
 
 @NgModule({

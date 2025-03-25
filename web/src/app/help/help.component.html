@@ -1,3 +1,4 @@
+<div class="content-area">
 <h1> Howto use VIA </h1>
 
 <h2> Creating </h2>
@@ -149,4 +150,6 @@ install --overwritevmfs {{ if not .createvmfs }} --novmfsondisk {{ end }} --firs
 network --bootproto=static --ip={{ .ip }} --gateway={{ .gateway }} --netmask={{ .netmask }} --nameserver={{ .dns }} --hostname={{ .hostname }} --device={{ .mac }} {{if .vlan}} --vlanid={{.vlan}} {{end}} <br/>
 <br/>
 reboot</i></p>
+</div>
+
 </div>

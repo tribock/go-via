@@ -1,0 +1,114 @@
+<button class="btn btn-primary" (click)="wizard.open()">Start Guided Host Deployment</button>
+
+<clr-wizard
+  #wizard
+  [(clrWizardOpen)]="open"
+  [clrWizardSize]="'xl'"
+  (clrWizardOnFinish)="doFinish()"
+  (clrWizardOnCancel)="doFinish()"
+>
+  <clr-wizard-title>
+    <!-- {{ model.forceReset ? 'Wizard resets' : "Wizard doesn't reset" }} -->
+    Guided Host Deployment
+  </clr-wizard-title>
+
+  <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
+  <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
+  <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
+  <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
+
+  <clr-wizard-page>
+    <ng-template clrPageTitle>Add Hosts</ng-template>
+
+    
+    <clr-dropdown>
+      <button class="btn btn-outline btn-sm" clrDropdownTrigger>
+        Vendor: {{ model.selectedVendor || 'Select Vendor' }} &nbsp;
+        <cds-icon shape="angle" direction="down"></cds-icon>
+      </button>
+      <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+        <label class="dropdown-header" aria-hidden="true">Select Host Vendor</label>
+        <div aria-label="HPE" clrDropdownItem (click)="selectVendor('HPE')">HPE</div>
+        <div aria-label="Lenovo" clrDropdownItem (click)="selectVendor('Lenovo')">Lenovo</div>
+      </clr-dropdown-menu>
+    </clr-dropdown>
+
+
+
+    <clr-checkbox-wrapper>
+      <input #useSameCreds type="checkbox" clrCheckbox name="useSameCreds" [(ngModel)]="model.useSameCreds" />
+      <label>Use the same credentials for all Hosts</label>
+    </clr-checkbox-wrapper>
+    <div *ngIf="model.useSameCreds" class="credentials-container">
+      <clr-input-container>
+        <label>Username</label>
+        <input clrInput placeholder="Enter username" [(ngModel)]="model.username" />
+      </clr-input-container>
+      <clr-password-container>
+        <label>Password</label>
+        <input clrPassword placeholder="Enter password" [(ngModel)]="model.password" />
+      </clr-password-container>
+    </div>
+<!-- 
+    <button class="btn btn-outline btn-sm" (click)="addHost(group.id, group.pool_id)">Add host</button> -->
+
+    <div  class="credentials-container">
+      <clr-input-container >
+        <label>ILO IP address</label>
+        <input clrInput placeholder="Enter ILO IP address" [(ngModel)]="model.iloIpAddr" />
+      </clr-input-container>
+      <clr-input-container *ngIf="!model.useSameCreds" >
+        <label>Username</label>
+        <input clrInput placeholder="Enter username" [(ngModel)]="model.username" />
+      </clr-input-container>
+      <clr-password-container *ngIf="!model.useSameCreds">
+        <label>Password</label>
+        <input clrPassword placeholder="Enter password" [(ngModel)]="model.password" />
+      </clr-password-container>
+    </div>
+
+    
+    <!-- mandatory -->
+  </clr-wizard-page>
+
+  <clr-wizard-page>
+    <ng-template clrPageTitle>Page 2</ng-template>
+    <!-- mandatory -->
+    <clr-input-container>
+      <label>What is your favorite color?</label>
+      <input clrInput placeholder="Color?" #stepTwoInput [(ngModel)]="model.favoriteColor" />
+    </clr-input-container>
+  </clr-wizard-page>
+
+  <clr-wizard-page>
+    <ng-template clrPageTitle>Page 3</ng-template>
+    <!-- mandatory -->
+    <clr-input-container>
+      <label>What is your favorite ice cream?</label>
+      <input clrInput placeholder="Flavor?" #stepThreeInput [(ngModel)]="model.flavorOfIceCream" />
+    </clr-input-container>
+  </clr-wizard-page>
+
+  <clr-wizard-page>
+    <ng-template clrPageTitle>Page 4</ng-template>
+    <!-- mandatory -->
+    <clr-input-container>
+      <label>What is your lucky number?</label>
+      <input
+        clrInput
+        placeholder="Lucky number?"
+        #stepFourInput
+        type="number"
+        [(ngModel)]="model.luckyNumber"
+      />
+
+    </clr-input-container>
+    <p>Check below if you want the wizard to reset when it finishes or closes.</p>
+
+    <clr-checkbox-wrapper>
+      <input #forceReset type="checkbox" clrCheckbox name="forceReset" [(ngModel)]="model.forceReset" />
+      <label>Force reset on close</label>
+    </clr-checkbox-wrapper>
+    
+  </clr-wizard-page>
+</clr-wizard>
