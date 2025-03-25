@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Form, FormGroup, FormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ClrFormsModule, ClrWizard, ClrWizardModule, ClarityModule } from '@clr/angular';
 
 @Component({
@@ -10,11 +10,22 @@ import { ClrFormsModule, ClrWizard, ClrWizardModule, ClarityModule } from '@clr/
   standalone: true,
   imports: [CommonModule, ClrWizardModule, ClrFormsModule, FormsModule,ClarityModule],
 })
+
 export class HostDeploymentComponent implements OnInit {
   @ViewChild('wizard', { static: true }) wizard: ClrWizard | undefined;
 
   open = false;
   model: any;
+  
+  Hostform: UntypedFormGroup;
+
+  constructor(private HostformBuilder: UntypedFormBuilder) {
+    this.Hostform = this.HostformBuilder.group({
+      iloIpAddr: "okj" ,
+      username: "asdf",
+      password: "asdf",
+    });
+  }
 
   ngOnInit() {
     this.model = {
@@ -24,7 +35,10 @@ export class HostDeploymentComponent implements OnInit {
       luckyNumber: '',
       flavorOfIceCream: '',
       iloIpAddr: '',
+      hosts: this.Hostform,
     };
+    console.log("HODOR");
+    console.log(this.model.hosts);
   }
 
   selectVendor(vendor: string): void {
@@ -33,6 +47,10 @@ export class HostDeploymentComponent implements OnInit {
 
   doFinish(): void {
     this.doReset();
+  }
+
+  addHost(): void {
+
   }
 
   doReset(): void {

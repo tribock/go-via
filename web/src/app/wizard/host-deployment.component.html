@@ -49,23 +49,23 @@
         <input clrPassword placeholder="Enter password" [(ngModel)]="model.password" />
       </clr-password-container>
     </div>
-<!-- 
-    <button class="btn btn-outline btn-sm" (click)="addHost(group.id, group.pool_id)">Add host</button> -->
 
-    <div  class="credentials-container">
-      <clr-input-container >
+    <div *ngFor="let host of model.hosts; let i = index" class="credentials-container">
+      <clr-input-container>
         <label>ILO IP address</label>
-        <input clrInput placeholder="Enter ILO IP address" [(ngModel)]="model.iloIpAddr" />
+        <input clrInput placeholder="Enter ILO IP address" [(ngModel)]="host.iloIpAddr" />
       </clr-input-container>
-      <clr-input-container *ngIf="!model.useSameCreds" >
+      <clr-input-container *ngIf="!model.useSameCreds">
         <label>Username</label>
-        <input clrInput placeholder="Enter username" [(ngModel)]="model.username" />
+        <input clrInput placeholder="Enter username" [(ngModel)]="host.username" />
       </clr-input-container>
       <clr-password-container *ngIf="!model.useSameCreds">
         <label>Password</label>
-        <input clrPassword placeholder="Enter password" [(ngModel)]="model.password" />
+        <input clrPassword placeholder="Enter password" [(ngModel)]="host.password" />
       </clr-password-container>
     </div>
+
+    <button class="btn btn-outline btn-sm" (click)="addHost()">Add host</button>
 
     
     <!-- mandatory -->
