@@ -23,6 +23,7 @@ export class HostDeploymentComponent implements OnInit {
   loadingFlag = false;
   errorFlag = false;
 
+
   ngOnInit() {
     this.model = {
       forceReset: true,
@@ -33,6 +34,8 @@ export class HostDeploymentComponent implements OnInit {
       hosts: [],
       errors: [],
       selectVendor: '',
+      iloPort: 443,
+      setIloPort: false,
     };
 
   }
@@ -97,6 +100,8 @@ export class HostDeploymentComponent implements OnInit {
       this.model.errors = [];
       this.model.selectedVendor = '';
       this.model.useSameCreds = false;
+      this.model.iloPort = 443;
+      this.model.setIloPort = false;
     
   }
 
@@ -238,7 +243,7 @@ export class HostDeploymentComponent implements OnInit {
 
         console.log('Validating host ilo ip addr:', host.iloIpAddr);
   
-        this.apiService.checkILOM(host.iloIpAddr, 443).subscribe({
+        this.apiService.checkILOM(host.iloIpAddr, this.model.iloPort).subscribe({
           next: (resp: any) => {        
 
             console.log('Response:', resp);
@@ -251,7 +256,7 @@ export class HostDeploymentComponent implements OnInit {
             resolve(); // Resolve the promise after validation is complete
           },
           error: (err: any) => {
-            console.error('Error:', err.error.message);
+            console.error('Error:', err.error.message ?? err);
             this.model.errors.push({
               subject: host.iloIpAddr,
               message: err.error.message,

@@ -87,14 +87,16 @@
 
     <!-- Datagrid to show already added hosts -->
     <clr-datagrid>
-      <clr-dg-column>ilomip address</clr-dg-column>
-      <clr-dg-column>username</clr-dg-column>
-      <clr-dg-column>password</clr-dg-column>
+      <clr-dg-column>ILO IP Address</clr-dg-column>
+      <clr-dg-column>Username</clr-dg-column>
+      <clr-dg-column>Password</clr-dg-column>
       <clr-dg-column>Actions</clr-dg-column>
       <clr-dg-row *clrDgItems="let host of model.hosts; let i = index">
         <clr-dg-cell>{{host.iloIpAddr}}</clr-dg-cell>
         <clr-dg-cell *ngIf="!model.useSameCreds">{{host.username}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="model.useSameCreds">{{model.username }}</clr-dg-cell>
         <clr-dg-cell *ngIf="!model.useSameCreds">{{ '*'.repeat(host.password.length) }}</clr-dg-cell>
+        <clr-dg-cell *ngIf="model.useSameCreds">{{ '*'.repeat(model.password.length) }}</clr-dg-cell>
         <clr-dg-cell>
           <button class="btn btn-sm btn-outline" (click)="editHost(i)">Edit</button>
           <button class="btn btn-sm btn-danger" (click)="removeHost(i)">Remove</button>
@@ -134,6 +136,18 @@
     <input #fileInput type="file" style="display: none;" (change)="importHostsFromCSVToGroup($event)" />
 
     <!-- mandatory -->
+    <clr-checkbox-wrapper>
+      <input #setIloPort type="checkbox" clrCheckbox name="setIloPort" [(ngModel)]="model.setIloPort" />
+      <label>Use another ILO Port than 443</label>
+    </clr-checkbox-wrapper>
+    <div *ngIf="model.setIloPort" class="credentials-container">
+      <clr-input-container>
+        <label>Port</label>
+        <input clrInput placeholder="Enter Port" [(ngModel)]="model.iloPort" />
+      </clr-input-container>
+    </div>
+
+
 
     <clr-spinner *ngIf="loadingFlag">Loading</clr-spinner>
   </clr-wizard-page>
