@@ -1,12 +1,10 @@
 <button class="btn btn-primary" (click)="wizard.open()">Start Guided Host Deployment</button>
 
-<clr-wizard
-  #wizard
-  [(clrWizardOpen)]="open"
-  [clrWizardSize]="'xl'"
+<clr-wizard #wizard 
+  [(clrWizardOpen)]="open" 
+  [clrWizardSize]="'xl'" 
   (clrWizardOnFinish)="doFinish()"
-  (clrWizardOnCancel)="doFinish()"
->
+  (clrWizardOnCancel)="doFinish()">
   <clr-wizard-title>
     <!-- {{ model.forceReset ? 'Wizard resets' : "Wizard doesn't reset" }} -->
     Guided Host Deployment
@@ -17,10 +15,44 @@
   <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
   <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
 
-  <clr-wizard-page>
+  <clr-wizard-page 
+    clrWizardPagePreventDefault="true" 
+    (clrWizardPageOnCommit)="onCommit()">
     <ng-template clrPageTitle>Add Hosts</ng-template>
 
+    <!-- Handle loading and error states here -->
+
     
+    <clr-alert
+      [clrAlertType]="'alert-info'"
+      [clrAlertClosable]="true"
+      [clrCloseButtonAriaLabel]="'Close Wiki alert'"
+    >
+      <clr-alert-item>
+        This&nbsp;
+        <a
+          href="settings/help"
+          target="_blank"
+        >
+          help page
+        </a>
+        &nbsp;might help you.
+      </clr-alert-item>
+    </clr-alert>
+    <clr-alert
+      *ngIf="errorFlag"
+      [clrAlertType]="'alert-danger'"
+      [clrCloseButtonAriaLabel]="'Close Answer alert'"
+    >
+    <div *ngFor="let error of model.errors">
+      <clr-alert-item>{{ error.iloIpAddr }}:  {{ error.message }}</clr-alert-item>
+    </div>
+      
+    </clr-alert>
+
+    <!-- select Vendor using Dropdown -->
+
+
     <clr-dropdown>
       <button class="btn btn-outline btn-sm" clrDropdownTrigger>
         Vendor: {{ model.selectedVendor || 'Select Vendor' }} &nbsp;
@@ -50,18 +82,18 @@
       </clr-password-container>
     </div>
 
-    <clr-datagrid  >
+    <clr-datagrid>
       <clr-dg-column>ilomip address</clr-dg-column>
       <clr-dg-column>username</clr-dg-column>
       <clr-dg-column>password</clr-dg-column>
       <clr-dg-row *ngFor="let host of model.hosts">
-          <clr-dg-cell >{{host.iloIpAddr}}</clr-dg-cell>
-          <clr-dg-cell *ngIf="!model.useSameCreds">{{host.username}}</clr-dg-cell>
-          <clr-dg-cell *ngIf="!model.useSameCreds">{{ '*'.repeat(host.password.length) }}</clr-dg-cell>
+        <clr-dg-cell>{{host.iloIpAddr}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="!model.useSameCreds">{{host.username}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="!model.useSameCreds">{{ '*'.repeat(host.password.length) }}</clr-dg-cell>
       </clr-dg-row>
       <clr-dg-footer>{{ (model.hosts ?? []).length }} Hosts</clr-dg-footer>
-  </clr-datagrid>
-    
+    </clr-datagrid>
+
     <!-- Input line for adding a new host -->
     <div class="credentials-container">
       <clr-input-container>
@@ -77,15 +109,17 @@
         <input clrPassword placeholder="Enter password" [(ngModel)]="newHostInput.password" />
       </clr-password-container>
     </div>
-    
+
     <!-- Button to add the new host -->
     <button class="btn btn-outline btn-sm" (click)="addHost()">Add host</button>
 
-     <!-- Button to add bulk import new hosts -->
+    <!-- Button to add bulk import new hosts -->
     <button class="btn btn-outline btn-sm" (click)="triggerFileInput()">Import Hosts</button>
     <input type="file" #fileInput accept=".csv" (change)="importHostsFromCSVToGroup()" style="display: none;" />
-    
+
     <!-- mandatory -->
+
+    <clr-spinner *ngIf="loadingFlag">Loading</clr-spinner>
   </clr-wizard-page>
 
   <clr-wizard-page>
@@ -111,13 +145,7 @@
     <!-- mandatory -->
     <clr-input-container>
       <label>What is your lucky number?</label>
-      <input
-        clrInput
-        placeholder="Lucky number?"
-        #stepFourInput
-        type="number"
-        [(ngModel)]="model.luckyNumber"
-      />
+      <input clrInput placeholder="Lucky number?" #stepFourInput type="number" [(ngModel)]="model.luckyNumber" />
 
     </clr-input-container>
     <p>Check below if you want the wizard to reset when it finishes or closes.</p>
@@ -126,6 +154,6 @@
       <input #forceReset type="checkbox" clrCheckbox name="forceReset" [(ngModel)]="model.forceReset" />
       <label>Force reset on close</label>
     </clr-checkbox-wrapper>
-    
+
   </clr-wizard-page>
 </clr-wizard>

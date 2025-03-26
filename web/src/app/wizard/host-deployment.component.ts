@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { sleep } from '@cds/core/internal';
 import { ClrFormsModule, ClrWizard, ClrWizardModule, ClarityModule } from '@clr/angular';
 
 @Component({
@@ -15,6 +16,8 @@ export class HostDeploymentComponent implements OnInit {
 
   open = false;
   model: any;
+  loadingFlag = false;
+  errorFlag = false;
 
 
 
@@ -27,6 +30,7 @@ export class HostDeploymentComponent implements OnInit {
       flavorOfIceCream: '',
       iloIpAddr: '',
       hosts: [],
+      errors: [],
     };
     console.log('HODOR');
     console.log(this.model.hosts);
@@ -74,6 +78,7 @@ export class HostDeploymentComponent implements OnInit {
   }
 
 
+  // IMPORT
   // import funcs to handle bulk import of hosts
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -162,5 +167,44 @@ export class HostDeploymentComponent implements OnInit {
     return data;
   }
 
+  // END IMPORT
 
+  // VALIDATE
+
+  async onCommit(): Promise<void> {
+    this.loadingFlag = true;
+    this.errorFlag = false;
+
+    await Promise.all(
+        this.model.hosts.map(async (host) => {
+            await sleep(100);
+            this.validateHost(host);
+        })
+    );
+
+    if (this.model.errors.length > 0 ){
+        this.errorFlag = true;
+        this.loadingFlag = false;
+    } else {    
+    this.wizard?.next();
+    }
 }
+
+  validateHost(host: any) {
+    
+      console.log('Validating host ilo ip addr:', host.iloIpAddr);
+
+      // Simulate a random validation result
+      const isValid = Math.random() > 0.5;
+      if (!isValid) {
+        this.model.errors.push({
+          iloIpAddr: host.iloIpAddr,
+          message: 'Failed to validate host',
+        });
+      }
+  }
+
+  
+}
+
+
