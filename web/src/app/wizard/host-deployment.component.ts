@@ -40,6 +40,11 @@ export class HostDeploymentComponent implements OnInit {
     this.model.selectedVendor = vendor;
   }
 
+  doCancel(): void {
+this.doFinish();
+    this.wizard?.reset(); // Explicitly reset the wizard
+    this.open = false; // Close the wizard
+  }
   doFinish(): void {
     this.doReset();
   }
@@ -67,6 +72,16 @@ export class HostDeploymentComponent implements OnInit {
     console.log(this.model.hosts);
   }
 
+  editHost(index: number): void {
+    const host = this.model.hosts[index];
+    this.newHostInput = { ...host }; // Populate input fields with the selected host's data
+    this.removeHost(index); // Remove the host temporarily to allow editing
+  }
+
+  removeHost(index: number): void {
+    this.model.hosts.splice(index, 1); // Remove the host at the specified index
+  }
+
   doReset(): void {
     if (this.model.forceReset) {
       this.wizard?.reset();
@@ -74,6 +89,10 @@ export class HostDeploymentComponent implements OnInit {
       this.model.favoriteColor = '';
       this.model.luckyNumber = '';
       this.model.flavorOfIceCream = '';
+      this.loadingFlag = false;
+      this.errorFlag = false;
+      this.model.hosts = [];
+      this.model.errors = [];
     }
   }
 
@@ -174,36 +193,45 @@ export class HostDeploymentComponent implements OnInit {
   async onCommit(): Promise<void> {
     this.loadingFlag = true;
     this.errorFlag = false;
-
-    await Promise.all(
-        this.model.hosts.map(async (host) => {
-            await sleep(100);
-            this.validateHost(host);
-        })
-    );
-
-    if (this.model.errors.length > 0 ){
-        this.errorFlag = true;
-        this.loadingFlag = false;
-    } else {    
-    this.wizard?.next();
+  
+    console.log(this.model.hosts);
+  
+    // Clear previous errors
+    this.model.errors = [];
+  
+    for (const host of this.model.hosts) {
+      await this.validateHost(host); // Wait for each host validation to complete
     }
-}
-
-  validateHost(host: any) {
-    
-      console.log('Validating host ilo ip addr:', host.iloIpAddr);
-
-      // Simulate a random validation result
-      const isValid = Math.random() > 0.5;
-      if (!isValid) {
-        this.model.errors.push({
-          iloIpAddr: host.iloIpAddr,
-          message: 'Failed to validate host',
-        });
-      }
+  
+    console.log('Validation done');
+    console.log(this.model.errors);
+  
+    this.loadingFlag = false;
+  
+    // Set error flag if there are errors
+    if (this.model.errors.length > 0) {
+      this.errorFlag = true;
+    }
   }
 
+  validateHost(host: any): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log('Validating host ilo ip addr:', host.iloIpAddr);
+  
+        // Simulate a random validation result
+        const isValid = Math.random() > 0.5;
+        if (!isValid) {
+          this.model.errors.push({
+            iloIpAddr: host.iloIpAddr,
+            message: 'Failed to validate host',
+          });
+        }
+  
+        resolve(); // Resolve the promise after validation is complete
+      }, 1000); // Simulate a 1-second delay
+    });
+  }
   
 }
 

@@ -4,7 +4,7 @@
   [(clrWizardOpen)]="open" 
   [clrWizardSize]="'xl'" 
   (clrWizardOnFinish)="doFinish()"
-  (clrWizardOnCancel)="doFinish()">
+  (clrWizardOnCancel)="doCancel()">
   <clr-wizard-title>
     <!-- {{ model.forceReset ? 'Wizard resets' : "Wizard doesn't reset" }} -->
     Guided Host Deployment
@@ -16,8 +16,11 @@
   <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
 
   <clr-wizard-page 
-    clrWizardPagePreventDefault="true" 
-    (clrWizardPageOnCommit)="onCommit()">
+
+    (clrWizardPageOnCommit)="onCommit()"
+    (clrWizardPageOnCancel)="doCancel()"
+    [clrWizardPagePreventDefault]="true"
+    >
     <ng-template clrPageTitle>Add Hosts</ng-template>
 
     <!-- Handle loading and error states here -->
@@ -82,16 +85,28 @@
       </clr-password-container>
     </div>
 
+    <!-- Datagrid to show already added hosts -->
     <clr-datagrid>
       <clr-dg-column>ilomip address</clr-dg-column>
       <clr-dg-column>username</clr-dg-column>
       <clr-dg-column>password</clr-dg-column>
-      <clr-dg-row *ngFor="let host of model.hosts">
+      <clr-dg-column>Actions</clr-dg-column>
+      <clr-dg-row *clrDgItems="let host of model.hosts; let i = index">
         <clr-dg-cell>{{host.iloIpAddr}}</clr-dg-cell>
         <clr-dg-cell *ngIf="!model.useSameCreds">{{host.username}}</clr-dg-cell>
         <clr-dg-cell *ngIf="!model.useSameCreds">{{ '*'.repeat(host.password.length) }}</clr-dg-cell>
+        <clr-dg-cell>
+          <button class="btn btn-sm btn-outline" (click)="editHost(i)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="removeHost(i)">Remove</button>
+        </clr-dg-cell>
       </clr-dg-row>
-      <clr-dg-footer>{{ (model.hosts ?? []).length }} Hosts</clr-dg-footer>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="4">
+          {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of
+          {{ (model.hosts ?? []).length }} Hosts
+        </clr-dg-pagination>
+      </clr-dg-footer>
+
     </clr-datagrid>
 
     <!-- Input line for adding a new host -->
