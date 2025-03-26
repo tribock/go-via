@@ -50,23 +50,40 @@
       </clr-password-container>
     </div>
 
-    <div *ngFor="let host of model.hosts; let i = index" class="credentials-container">
+    <clr-datagrid  >
+      <clr-dg-column>ilomip address</clr-dg-column>
+      <clr-dg-column>username</clr-dg-column>
+      <clr-dg-column>password</clr-dg-column>
+      <clr-dg-row *ngFor="let host of model.hosts">
+          <clr-dg-cell >{{host.iloIpAddr}}</clr-dg-cell>
+          <clr-dg-cell *ngIf="!model.useSameCreds">{{host.username}}</clr-dg-cell>
+          <clr-dg-cell *ngIf="!model.useSameCreds">{{ '*'.repeat(host.password.length) }}</clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>{{ (model.hosts ?? []).length }} Hosts</clr-dg-footer>
+  </clr-datagrid>
+    
+    <!-- Input line for adding a new host -->
+    <div class="credentials-container">
       <clr-input-container>
         <label>ILO IP address</label>
-        <input clrInput placeholder="Enter ILO IP address" [(ngModel)]="host.iloIpAddr" />
+        <input clrInput placeholder="Enter ILO IP address" [(ngModel)]="newHostInput.iloIpAddr" />
       </clr-input-container>
       <clr-input-container *ngIf="!model.useSameCreds">
         <label>Username</label>
-        <input clrInput placeholder="Enter username" [(ngModel)]="host.username" />
+        <input clrInput placeholder="Enter username" [(ngModel)]="newHostInput.username" />
       </clr-input-container>
       <clr-password-container *ngIf="!model.useSameCreds">
         <label>Password</label>
-        <input clrPassword placeholder="Enter password" [(ngModel)]="host.password" />
+        <input clrPassword placeholder="Enter password" [(ngModel)]="newHostInput.password" />
       </clr-password-container>
     </div>
-
+    
+    <!-- Button to add the new host -->
     <button class="btn btn-outline btn-sm" (click)="addHost()">Add host</button>
 
+     <!-- Button to add bulk import new hosts -->
+    <button class="btn btn-outline btn-sm" (click)="triggerFileInput()">Import Hosts</button>
+    <input type="file" #fileInput accept=".csv" (change)="importHostsFromCSVToGroup()" style="display: none;" />
     
     <!-- mandatory -->
   </clr-wizard-page>
