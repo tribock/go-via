@@ -281,6 +281,10 @@ func main() {
 			login.POST("", api.Login)
 		}
 
+		hosts := v1.Group("/checkilo")
+		{
+			hosts.POST("", api.CheckIP)
+		}
 		v1.GET("log", logServer.Handle)
 
 		v1.GET("version", api.Version(commit, date))

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { sleep } from '@cds/core/internal';
+import { ApiService } from '../api.service';
 import { ClrFormsModule, ClrWizard, ClrWizardModule, ClarityModule } from '@clr/angular';
 
 @Component({
@@ -13,13 +13,15 @@ import { ClrFormsModule, ClrWizard, ClrWizardModule, ClarityModule } from '@clr/
 })
 export class HostDeploymentComponent implements OnInit {
   @ViewChild('wizard', { static: true }) wizard: ClrWizard | undefined;
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
+  constructor(
+      private apiService: ApiService,
 
+    ) {};
   open = false;
   model: any;
   loadingFlag = false;
   errorFlag = false;
-
-
 
   ngOnInit() {
     this.model = {
@@ -28,20 +30,20 @@ export class HostDeploymentComponent implements OnInit {
       favoriteColor: '',
       luckyNumber: '',
       flavorOfIceCream: '',
-      iloIpAddr: '',
       hosts: [],
       errors: [],
+      selectVendor: '',
     };
-    console.log('HODOR');
-    console.log(this.model.hosts);
+
   }
 
   selectVendor(vendor: string): void {
     this.model.selectedVendor = vendor;
+    console.log('Selected vendor:', vendor);
   }
 
   doCancel(): void {
-this.doFinish();
+    this.doFinish();
     this.wizard?.reset(); // Explicitly reset the wizard
     this.open = false; // Close the wizard
   }
@@ -83,7 +85,7 @@ this.doFinish();
   }
 
   doReset(): void {
-    if (this.model.forceReset) {
+
       this.wizard?.reset();
       this.model.forceReset = true;
       this.model.favoriteColor = '';
@@ -93,48 +95,53 @@ this.doFinish();
       this.errorFlag = false;
       this.model.hosts = [];
       this.model.errors = [];
-    }
+      this.model.selectedVendor = '';
+      this.model.useSameCreds = false;
+    
   }
 
 
   // IMPORT
   // import funcs to handle bulk import of hosts
 
-  @ViewChild('fileInput') fileInput!: ElementRef;
-
-  triggerFileInput() {
-    this.fileInput.nativeElement.click();
+  triggerFileInput(): void {
+    if (this.fileInput) {
+      // Reset the file input value to ensure the change event is triggered
+      this.fileInput.nativeElement.value = '';
+      this.fileInput.nativeElement.click();
+    } else {
+      console.error('fileInput is not available. Ensure the wizard is open and the element is rendered.');
+    }
   }
 
-  importHostsFromCSVToGroup() {
+  importHostsFromCSVToGroup(event: Event): void {
+    console.log('Importing hosts from CSV to group');
     const target = event.target as HTMLInputElement;
-
+  
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       console.log('Selected file:', file.name);
-
+  
       // Call readCSVFile and handle the Promise
-      this.readCSVFile(file).then((parsedData) => {
-        console.log('Parsed Host Data:', parsedData);
-
-
-        parsedData.forEach((host) => {
-
-          // Add the new host to the hosts array
-          this.model.hosts.push({
-            iloIpAddr: host.iloIpAddr,
-            username: host.username,
-            password: host.password,
+      this.readCSVFile(file)
+        .then((parsedData) => {
+          console.log('Parsed Host Data:', parsedData);
+  
+          parsedData.forEach((host) => {
+            // Add the new host to the hosts array
+            this.model.hosts.push({
+              iloIpAddr: host.iloIpAddr,
+              username: host.username,
+              password: host.password,
+            });
+  
+            console.log(this.model.hosts);
           });
-
-                   
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          // Handle error, such as showing a notification to the user
         });
-
-
-      }).catch((error) => {
-        console.error('Error:', error);
-        // Handle error, such as showing a notification to the user
-      });
     }
   }
 
@@ -198,38 +205,61 @@ this.doFinish();
   
     // Clear previous errors
     this.model.errors = [];
-  
+
+    // Ensure a vendor has been chosen
+    if (!this.model.selectedVendor) {
+      this.model.errors.push({
+        subject: 'Vendor',
+        message: 'Please select a vendor before proceeding.',
+      });
+    }
+
     for (const host of this.model.hosts) {
       await this.validateHost(host); // Wait for each host validation to complete
     }
-  
+
     console.log('Validation done');
     console.log(this.model.errors);
-  
+
     this.loadingFlag = false;
-  
+
+
+
     // Set error flag if there are errors
     if (this.model.errors.length > 0) {
       this.errorFlag = true;
+    } else {
+      this.wizard?.next();
     }
   }
 
   validateHost(host: any): Promise<void> {
     return new Promise((resolve) => {
-      setTimeout(() => {
+
         console.log('Validating host ilo ip addr:', host.iloIpAddr);
   
-        // Simulate a random validation result
-        const isValid = Math.random() > 0.5;
-        if (!isValid) {
-          this.model.errors.push({
-            iloIpAddr: host.iloIpAddr,
-            message: 'Failed to validate host',
-          });
-        }
-  
-        resolve(); // Resolve the promise after validation is complete
-      }, 1000); // Simulate a 1-second delay
+        this.apiService.checkILOM(host.iloIpAddr, 443).subscribe({
+          next: (resp: any) => {        
+
+            console.log('Response:', resp);
+            if (resp.error) {
+              this.model.errors.push({
+                subject: host.iloIpAddr,
+                message: resp.error,
+              });
+            }
+            resolve(); // Resolve the promise after validation is complete
+          },
+          error: (err: any) => {
+            console.error('Error:', err.error.message);
+            this.model.errors.push({
+              subject: host.iloIpAddr,
+              message: err.error.message,
+            });
+            resolve(); // Resolve even if there's an error
+          }
+        });
+
     });
   }
   

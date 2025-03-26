@@ -171,4 +171,14 @@ export class ApiService {
       'https://' + window.location.host + '/v1/version'
     );
   }
+
+  public checkILOM(ip, port) {
+    return this.httpClient.post(
+      'https://' + window.location.host + '/v1/checkilo',
+      {
+        iloIpAddr: ip,
+        port: String(port),
+      }
+    );
+  }
 }

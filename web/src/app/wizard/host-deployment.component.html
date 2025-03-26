@@ -48,7 +48,7 @@
       [clrCloseButtonAriaLabel]="'Close Answer alert'"
     >
     <div *ngFor="let error of model.errors">
-      <clr-alert-item>{{ error.iloIpAddr }}:  {{ error.message }}</clr-alert-item>
+      <clr-alert-item>{{ error.subject }}:  {{ error.message }}</clr-alert-item>
     </div>
       
     </clr-alert>
@@ -130,7 +130,8 @@
 
     <!-- Button to add bulk import new hosts -->
     <button class="btn btn-outline btn-sm" (click)="triggerFileInput()">Import Hosts</button>
-    <input type="file" #fileInput accept=".csv" (change)="importHostsFromCSVToGroup()" style="display: none;" />
+    <input type="file" #fileInput accept=".csv" (change)="importHostsFromCSVToGroup($event)" style="display: none;" />
+    <input #fileInput type="file" style="display: none;" (change)="importHostsFromCSVToGroup($event)" />
 
     <!-- mandatory -->
 
