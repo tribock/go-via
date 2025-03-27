@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DeploymentsComponent } from './deployments/deployments.component';
-import { HealthChecksComponent } from './health-checks/health-checks.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { HelpComponent } from './help/help.component';
@@ -10,7 +9,6 @@ import { LoginComponent } from './login/login.component';
 import { ManageDhcpPoolsComponent } from './manage-dhcp-pools/manage-dhcp-pools.component';
 import { ManageImagesComponent } from './manage-images/manage-images.component';
 import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
-import { WizardComponent } from './wizard/wizard.component';
 
 const routes: Routes = [
   { path: 'deployments', component: DeploymentsComponent, children: [
@@ -18,9 +16,7 @@ const routes: Routes = [
     { path: 'manage-dhcp-pools', component: ManageDhcpPoolsComponent },
     { path: 'manage-images', component: ManageImagesComponent },
     { path: 'manage-groups', component: ManageGroupsComponent },
-    { path: 'wizard', component: WizardComponent },
   ]},
-  { path: 'health-checks', component: HealthChecksComponent },
   { path: 'settings', component: SettingsComponent , children: [
     { path: '', redirectTo: 'help', pathMatch: 'full' }, // Default child route
     { path: 'help', component: HelpComponent },

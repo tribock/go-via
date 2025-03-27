@@ -45,7 +45,7 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     console.log(this.isAuthenticated);
-    return true;
+    // return true; // use this for local dev
     return this.isAuthenticated;
   }
 }

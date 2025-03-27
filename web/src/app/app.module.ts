@@ -19,7 +19,6 @@ import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 import { LoginComponent } from './login/login.component';
 import { DeploymentsComponent } from './deployments/deployments.component';
-import { HealthChecksComponent } from './health-checks/health-checks.component';
 import { SettingsComponent } from './settings/settings.component';
 
 
@@ -29,7 +28,6 @@ import { SettingsComponent } from './settings/settings.component';
   declarations: [
     AppComponent,
     DeploymentsComponent,
-    HealthChecksComponent,
     SettingsComponent,
     ManageUsersComponent,
     HelpComponent,

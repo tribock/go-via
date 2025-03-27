@@ -2,9 +2,8 @@
 
 <div class="main-container">
   <header class="header-6">
-    <img src="assets/soultec_logo_web.png" alt="SoulTec Logo" class="logo" />
     <div class="branding">
-      <span class="title">soulDeploy</span>
+      <span class="title">go-via</span>
     </div>
     <div *ngIf="router.url !== '/login'" class="header-actions">
       <clr-dropdown>
@@ -31,9 +30,7 @@
         <li class="nav-item">
           <a class="nav-link active" routerLink="./deployments" routerLinkActive="active">Deployments</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="./health-checks" routerLinkActive="active">Health Checks</a>
-        </li>
+
         <li class="nav-item">
           <a class="nav-link" routerLink="./settings" routerLinkActive="active">Settings</a>
         </li>
@@ -44,7 +41,9 @@
       <h3 *ngIf="showAbout === true" class="modal-title">About</h3>
       <div class="modal-body">
 
-        <label class="clr-col-8 form-input">soulDeploy {{ version?.Version }} - version {{ version?.Commit}}</label>
+        <label class="clr-col-8 form-input">go-via - version {{ version?.Commit}} 
+        </label>
+
 
       </div>
     </clr-modal>
